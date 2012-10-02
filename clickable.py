@@ -1,6 +1,5 @@
 import pygame
 from pygame.locals import *
-from element_state import *
 
 class clickable:
 	rect = None

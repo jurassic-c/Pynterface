@@ -1,5 +1,3 @@
-from element_state import *
-
 class element:
 	gui = None
 	rect = None
