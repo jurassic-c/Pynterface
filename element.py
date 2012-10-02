@@ -1,16 +1,20 @@
+from element_state import *
+
 class element:
 	gui = None
 	rect = None
-	state = None
+	state = ""
 	parent = None
 	id = 0
 
-	has_focus = False
+	options = None
+
+	focused = False
 	onFocus = None
 	onBlur = None
 
 	def __init__(self):
-		pass
+		self.options = {"focused": {}}
 
 	def draw(self, events):
 		pass
@@ -29,12 +33,12 @@ class element:
 		self.rect.h = h
 
 	def focus(self):
-		if not self.has_focus and self.onFocus:
+		if not self.focused and self.onFocus:
 			self.onFocus(self)
-		self.has_focus = True
+		self.focused = True
 		self.gui.set_focus(self.id)
 
 	def blur(self):
-		if self.has_focus and self.onBlur:
+		if self.focused and self.onBlur:
 			self.onBlur(self)
-		self.has_focus = False
+		self.focused = False

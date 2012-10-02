@@ -3,12 +3,15 @@ from pygame.locals import *
 
 class hoverable:
 	rect = None
-	pos_mouse_over = False
-	last_pos_mouse_over = False
+	hover = False
+	last_hover = False
 	enabled = True
 
 	onMouseOver = None
 	onMouseOut = None
+
+	def __init__(self):
+		self.options["hover"] = {}
 
 	def draw(self, events):
 		if not self.enabled:
@@ -16,18 +19,18 @@ class hoverable:
 		for event in events:
 			if event.type == MOUSEMOTION:
 				if self.rect.collidepoint(event.pos):
-					self.pos_mouse_over = True
+					self.hover = True
 				else:
-					self.pos_mouse_over = False
+					self.hover = False
 				self.mouse_over(event)
 				self.mouse_out(event)
-				self.last_pos_mouse_over = self.pos_mouse_over
+				self.last_hover = self.hover
 
 
 	def mouse_over(self, event):
-		if self.pos_mouse_over and not self.last_pos_mouse_over and self.onMouseOver:
+		if self.hover and not self.last_hover and self.onMouseOver:
 			self.onMouseOver(self, event)
 
 	def mouse_out(self, event):
-		if not self.pos_mouse_over and self.last_pos_mouse_over and self.onMouseOut:
+		if not self.hover and self.last_hover and self.onMouseOut:
 			self.onMouseOut(self, event)
