@@ -4,7 +4,7 @@ from pygame.locals import *
 class clickable:
 	rect = None
 	enabled = True
-	status = ""
+	state = ""
 	onClick = None
 	onMouseDown = None
 	onMouseUp = None
@@ -15,12 +15,12 @@ class clickable:
 		for event in events:
 			if event.type == MOUSEBUTTONDOWN:
 				if self.onMouseDown and self.rect.collidepoint(event.pos):
-					self.status = "down"
+					self.state = "down"
 					self.onMouseDown(self, event)
 			elif event.type == MOUSEBUTTONUP:
-				if self.status == "down":
+				if self.state == "down":
 					if self.onMouseUp:
 						self.onMouseUp(self, event)
 					if self.onClick and self.rect.collidepoint(event.pos):
 						self.onClick(self, event)
-					self.status = "up"
+					self.state = "up"

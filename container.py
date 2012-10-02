@@ -2,13 +2,14 @@ from element import *
 
 class container(element):
 	child_elements = None
+	focused_id = 0
 
 	def __init__(self):
 		self.child_elements = []
 		element.__init__(self)
 
 	def add(self, elem):
-		element.gui = self.gui
+		elem.parent = self
 		self.child_elements.append(elem)
 
 	def draw(self, events):
