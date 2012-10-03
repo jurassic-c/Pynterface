@@ -27,3 +27,15 @@ class clickable:
 					if self.onClick and self.rect.collidepoint(event.pos):
 						self.onClick(self, event)
 					self.pressed = False
+
+	def press(self):
+		self.pressed = True
+		if self.onMouseDown:
+			self.onMouseDown(self, None)
+
+	def unpress(self):
+		self.pressed = False
+		if self.onMouseUp:
+			self.onMouseUp(self, None)
+		if self.onClick:
+			self.onClick(self, None)

@@ -39,6 +39,8 @@ class gui(container):
 					self.ctrl = False
 				if event.key in [K_LALT, K_RALT]:
 					self.alt = False
+				if event.key in [K_KP_ENTER, K_RETURN]:
+					self.unpress_focused()
 			elif event.type == KEYDOWN:
 				if event.key in [K_LSHIFT, K_RSHIFT]:
 					self.shift = True
@@ -48,6 +50,8 @@ class gui(container):
 					self.alt = True
 				if event.key == self.keymap.right:
 					self.tab_right()
+				if event.key in [K_KP_ENTER, K_RETURN]:
+					self.press_focused()
 				elif event.key == self.keymap.left:
 					self.tab_left()
 				elif event.key == self.keymap.up:
@@ -110,3 +114,13 @@ class gui(container):
 
 	def element_above(self):
 		return None
+
+	def press_focused(self):
+		global elements
+		focused = elements[self.focus_id]
+		focused.press()
+
+	def unpress_focused(self):
+		global elements
+		focused = elements[self.focus_id]
+		focused.unpress()
