@@ -19,6 +19,9 @@ class gui(container):
 	ctrl = False
 	alt = False
 
+	h_focus_idx = 0
+	v_focus_idx = 0
+
 	def __init__(self, surface):
 		container.__init__(self)
 		self.surface = surface
@@ -52,6 +55,10 @@ class gui(container):
 					self.tab_right()
 				elif event.key == self.keymap.left:
 					self.tab_left()
+				elif event.key == self.keymap.up:
+					self.tab_up()
+				elif event.key == self.keymap.down:
+					self.tab_down()
 
 	def add(self, elem):
 		global elements
@@ -84,8 +91,27 @@ class gui(container):
 		next = focused.prev_element()
 		self.tab(next, {"last_child": True})
 
+	def tab_up(self):
+		if not self.focus_id:
+			return
+		global elements
+		focused = elements[self.focus_id]
+		above = focused.element_above()
+		self.tab(above, {"h_focus_idx": self.h_focus_idx})
+
+	def tab_down(self):
+		if not self.focus_id:
+			return
+		global elements
+		focused = elements[self.focus_id]
+		below = focused.element_below()
+		self.tab(below, {"h_focus_idx": self.h_focus_idx})
+
 	def next_element(self):
 		return None
 
 	def prev_element(self):
+		return None
+
+	def element_above(self):
 		return None

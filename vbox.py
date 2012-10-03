@@ -14,3 +14,25 @@ class vbox(container):
 			self.resize(elem.rect.w, self.rect.h)
 		self.resize(elem.rect.w, self.rect.h + elem.rect.h)
 		container.add(self, elem)
+
+	def element_above(self, element_id):
+		if len(self.child_elements):
+			idx = self.child_ids[element_id]
+			if idx > 0:
+				return self.child_elements[idx-1]
+			return self.child_elements[-1]
+		else:
+			return self.parent.element_above(self.id)
+
+	def element_below(self, element_id):
+		if len(self.child_elements):
+			idx = self.child_ids[element_id]
+			if idx < len(self.child_elements) -1:
+				return self.child_elements[idx+1]
+			return self.child_elements[0]
+		else:
+			return self.parent.element_below(self.id)
+
+	def set_focus(self, element_id):
+		container.set_focus(self, element_id)
+		self.gui.v_focus_idx = self.focused_id

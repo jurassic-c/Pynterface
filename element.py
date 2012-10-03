@@ -32,6 +32,7 @@ class element:
 		if not self.focused and self.onFocus:
 			self.onFocus(self)
 		self.focused = True
+		self.parent.set_focus(self.id)
 		self.gui.set_focus(self.id)
 
 	def blur(self):
@@ -44,3 +45,9 @@ class element:
 
 	def prev_element(self):
 		return self.parent.prev_child(self.id)
+
+	def element_above(self):
+		return self.parent.element_above(self.id)
+
+	def element_below(self):
+		return self.parent.element_below(self.id)

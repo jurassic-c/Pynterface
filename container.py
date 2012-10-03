@@ -34,7 +34,6 @@ class container(element):
 	def focus(self, options={}):
 		if not len(self.child_elements):
 			return
-		self.focused_id = 0
 		if options.has_key("child_id"):
 			self.focused_id = options["child_id"]
 		if options.has_key("element_id"):
@@ -44,6 +43,9 @@ class container(element):
 		if options.has_key("last_child"):
 			self.focused_id = -1
 		self.child_elements[self.focused_id].focus(options)
+
+	def set_focus(self, element_id):
+		self.focused_id = self.child_ids[element_id]
 
 	def blur(self):
 		self.child_elements[self.focused_id].blur()
@@ -77,3 +79,15 @@ class container(element):
 			if prev:
 				return prev
 			return self.child_elements[-1]
+
+	def element_above(self, element_id):
+		if self.parent:
+			return self.parent.element_above(self.id)
+		else:
+			return None
+
+	def element_below(self, element_id):
+		if self.parent:
+			return self.parent.element_below(self.id)
+		else:
+			return None

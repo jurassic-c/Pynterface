@@ -14,3 +14,12 @@ class hbox(container):
 			self.resize(self.rect.w, elem.rect.h)
 		self.resize(self.rect.w + elem.rect.w, elem.rect.h)
 		container.add(self, elem)
+
+	def set_focus(self, element_id):
+		container.set_focus(self, element_id)
+		self.gui.h_focus_idx = self.focused_id
+
+	def focus(self, options={}):
+		if options.has_key("h_focus_idx"):
+			options["child_id"] = options["h_focus_idx"]
+		container.focus(self, options)
