@@ -42,6 +42,8 @@ class container(element):
 			self.focused_id = 0
 		if options.has_key("last_child"):
 			self.focused_id = -1
+		if self.focused_id > len(self.child_elements) -1:
+			self.focused_id = len(self.child_elements) -1
 		self.child_elements[self.focused_id].focus(options)
 
 	def set_focus(self, element_id):
