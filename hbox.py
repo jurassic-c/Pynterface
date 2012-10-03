@@ -23,3 +23,21 @@ class hbox(container):
 		if options.has_key("h_focus_idx"):
 			options["child_id"] = options["h_focus_idx"]
 		container.focus(self, options)
+
+	def element_left(self, element_id):
+		if len(self.child_elements):
+			idx = self.child_ids[element_id]
+			if idx > 0:
+				return self.child_elements[idx-1]
+			return self.child_elements[-1]
+		else:
+			return self.parent.element_right(self.id)
+
+	def element_right(self, element_id):
+		if len(self.child_elements):
+			idx = self.child_ids[element_id]
+			if idx < len(self.child_elements) -1:
+				return self.child_elements[idx+1]
+			return self.child_elements[0]
+		else:
+			return self.parent.element_right(self.id)

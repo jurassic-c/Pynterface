@@ -46,12 +46,7 @@ class gui(container):
 					self.ctrl = True
 				if event.key in [K_LALT, K_RALT]:
 					self.alt = True
-				if event.key == self.keymap.tab:
-					if self.shift:
-						self.tab_left()
-					else:
-						self.tab_right()
-				elif event.key == self.keymap.right:
+				if event.key == self.keymap.right:
 					self.tab_right()
 				elif event.key == self.keymap.left:
 					self.tab_left()
@@ -82,17 +77,17 @@ class gui(container):
 	def tab_right(self):
 		global elements
 		focused = elements[self.focus_id]
-		next = focused.next_element()
-		self.tab(next, {"first_child": True})
+		right = focused.element_right()
+		self.tab(right, {"v_focus_idx": self.v_focus_idx})
 
 	def tab_left(self):
 		global elements
 		focused = elements[self.focus_id]
-		next = focused.prev_element()
-		self.tab(next, {"last_child": True})
+		left = focused.element_left()
+		self.tab(left, {"v_focus_idx": self.v_focus_idx})
 
 	def tab_up(self):
-		if not self.focus_id:
+		if self.focus_id == None:
 			return
 		global elements
 		focused = elements[self.focus_id]
@@ -100,7 +95,7 @@ class gui(container):
 		self.tab(above, {"h_focus_idx": self.h_focus_idx})
 
 	def tab_down(self):
-		if not self.focus_id:
+		if self.focus_id == None:
 			return
 		global elements
 		focused = elements[self.focus_id]

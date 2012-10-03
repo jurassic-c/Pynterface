@@ -60,25 +60,17 @@ class container(element):
 			return self.child_elements[-1]
 		return None
 
-	def next_child(self, elem_id):
-		idx = self.child_ids[elem_id]
-		if idx < len(self.child_elements) -1:
-			return self.child_elements[idx+1]
+	def element_right(self, elem_id):
+		if self.parent:
+			return self.parent.element_right(self.id)
 		else:
-			next = self.next_element()
-			if next:
-				return next
-			return self.child_elements[0]
+			return None
 
-	def prev_child(self, elem_id):
-		idx = self.child_ids[elem_id]
-		if idx > 0:
-			return self.child_elements[idx-1]
+	def element_left(self, elem_id):
+		if self.parent:
+			return self.parent.element_left(self.id)
 		else:
-			prev = self.prev_element()
-			if prev:
-				return prev
-			return self.child_elements[-1]
+			return None
 
 	def element_above(self, element_id):
 		if self.parent:

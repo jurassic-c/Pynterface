@@ -15,6 +15,11 @@ class vbox(container):
 		self.resize(elem.rect.w, self.rect.h + elem.rect.h)
 		container.add(self, elem)
 
+	def focus(self, options={}):
+		if options.has_key("v_focus_idx"):
+			options["child_id"] = options["v_focus_idx"]
+		container.focus(self, options)
+
 	def element_above(self, element_id):
 		if len(self.child_elements):
 			idx = self.child_ids[element_id]

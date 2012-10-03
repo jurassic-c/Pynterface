@@ -40,11 +40,11 @@ class element:
 			self.onBlur(self)
 		self.focused = False
 
-	def next_element(self):
-		return self.parent.next_child(self.id)
+	def element_right(self):
+		return self.parent.element_right(self.id)
 
-	def prev_element(self):
-		return self.parent.prev_child(self.id)
+	def element_left(self):
+		return self.parent.element_left(self.id)
 
 	def element_above(self):
 		return self.parent.element_above(self.id)
