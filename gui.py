@@ -15,6 +15,9 @@ class gui(container):
 	surface = None
 	focus_id = None
 	keymap = None
+	shift = False
+	ctrl = False
+	alt = False
 
 	def __init__(self, surface):
 		container.__init__(self)
@@ -26,9 +29,29 @@ class gui(container):
 		for child in self.child_elements:
 			child.draw(events)
 		for event in events:
-			if event.type == KEYDOWN:
+			if event.type == KEYUP:
+				if event.key in [K_LSHIFT, K_RSHIFT]:
+					self.shift = False
+				if event.key in [K_LCTRL, K_RCTRL]:
+					self.ctrl = False
+				if event.key in [K_LALT, K_RALT]:
+					self.alt = False
+			elif event.type == KEYDOWN:
+				if event.key in [K_LSHIFT, K_RSHIFT]:
+					self.shift = True
+				if event.key in [K_LCTRL, K_RCTRL]:
+					self.ctrl = True
+				if event.key in [K_LALT, K_RALT]:
+					self.alt = True
 				if event.key == self.keymap.tab:
-					self.tab()
+					if self.shift:
+						self.tab_left()
+					else:
+						self.tab_right()
+				elif event.key == self.keymap.right:
+					self.tab_right()
+				elif event.key == self.keymap.left:
+					self.tab_left()
 
 	def add(self, elem):
 		global elements
@@ -46,11 +69,23 @@ class gui(container):
 			elements[self.focus_id].blur()
 		self.focus_id = elem_id
 
-	def tab(self):
+	def tab(self, next_element, options={}):
+		next_element.focus(options)
+
+	def tab_right(self):
 		global elements
 		focused = elements[self.focus_id]
 		next = focused.next_element()
-		next.focus()
+		self.tab(next, {"first_child": True})
+
+	def tab_left(self):
+		global elements
+		focused = elements[self.focus_id]
+		next = focused.prev_element()
+		self.tab(next, {"last_child": True})
 
 	def next_element(self):
+		return None
+
+	def prev_element(self):
 		return None

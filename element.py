@@ -28,7 +28,7 @@ class element:
 		self.rect.w = w
 		self.rect.h = h
 
-	def focus(self):
+	def focus(self, options={}):
 		if not self.focused and self.onFocus:
 			self.onFocus(self)
 		self.focused = True
@@ -41,3 +41,6 @@ class element:
 
 	def next_element(self):
 		return self.parent.next_child(self.id)
+
+	def prev_element(self):
+		return self.parent.prev_child(self.id)

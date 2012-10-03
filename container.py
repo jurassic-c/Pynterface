@@ -31,11 +31,32 @@ class container(element):
 		for child in self.child_elements:
 			child.move(x+child.rect.x, y+child.rect.y)
 
-	def focus(self):
-		self.child_elements[self.focused_id].focus()
+	def focus(self, options={}):
+		if not len(self.child_elements):
+			return
+		self.focused_id = 0
+		if options.has_key("child_id"):
+			self.focused_id = options["child_id"]
+		if options.has_key("element_id"):
+			self.focused_id = self.child_ids[options["element_id"]]
+		if options.has_key("first_child"):
+			self.focused_id = 0
+		if options.has_key("last_child"):
+			self.focused_id = -1
+		self.child_elements[self.focused_id].focus(options)
 
 	def blur(self):
 		self.child_elements[self.focused_id].blur()
+
+	def first_child(self):
+		if len(self.child_elements):
+			return self.child_elements[0]
+		return None
+
+	def last_child(self):
+		if len(self.child_elements):
+			return self.child_elements[-1]
+		return None
 
 	def next_child(self, elem_id):
 		idx = self.child_ids[elem_id]
@@ -46,3 +67,13 @@ class container(element):
 			if next:
 				return next
 			return self.child_elements[0]
+
+	def prev_child(self, elem_id):
+		idx = self.child_ids[elem_id]
+		if idx > 0:
+			return self.child_elements[idx-1]
+		else:
+			prev = self.prev_element()
+			if prev:
+				return prev
+			return self.child_elements[-1]
