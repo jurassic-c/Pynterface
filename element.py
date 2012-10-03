@@ -19,8 +19,6 @@ class element:
 
 	def set_gui(self, gui):
 		self.gui = gui
-		if not self.id:
-			self.id = self.gui.register_element(self)
 
 	def move(self, x, y):
 		self.rect.x = x
@@ -40,3 +38,6 @@ class element:
 		if self.focused and self.onBlur:
 			self.onBlur(self)
 		self.focused = False
+
+	def next_element(self):
+		return self.parent.next_child(self.id)
