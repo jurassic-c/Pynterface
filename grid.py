@@ -1,8 +1,6 @@
 class grid:
 	w = 0
 	h = 0
-
-	# Grid will be stored sideways so that you can use x and y coords
 	grid = None
 
 	def __init__(self):
@@ -69,15 +67,12 @@ class grid:
 				self.set(x, y+h, new_grid[x][y])
 
 	def _expand(self, w, h):
-		#print "  B:", self.h
 		if w > self.w:
 			for i in range(w - self.w):
 				self.grid.append(grid_array())
 		for col in self.grid:
 			for i in range(h - len(col)):
 				col.append(None)
-		#print "  A:", self.h
-		#print "  G:", self.grid
 		self.h = h
 
 	def get_col(self, x):

@@ -81,7 +81,6 @@ class gui(container):
 		for y in range(self.focus_grid.h):
 			for x in range(self.focus_grid.w):
 				item = self.focus_grid.item((x, y))
-				print item.id,
 				if item.id not in added:
 					item.tab_order = len(self.tabs)
 					self.tabs.append((x, y))
