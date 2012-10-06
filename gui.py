@@ -13,7 +13,7 @@ class gui(container):
 	child_elements = None
 	elements = None
 	surface = None
-	focus_id = None
+	focus_coords = None
 	keymap = None
 	shift = False
 	ctrl = False
@@ -22,11 +22,15 @@ class gui(container):
 	h_focus_idx = 0
 	v_focus_idx = 0
 
+	tabs = None
+	tab_idx = 0
+
 	def __init__(self, surface):
 		container.__init__(self)
 		self.surface = surface
 		self.keymap = keymap()
-		self.focus = []
+		self.focus_coords = (0,0)
+		self.tabs = []
 
 	def draw(self, events):
 		for child in self.child_elements:
@@ -48,63 +52,105 @@ class gui(container):
 					self.ctrl = True
 				if event.key in [K_LALT, K_RALT]:
 					self.alt = True
-				if event.key == self.keymap.right:
-					self.tab_right()
 				if event.key in [K_KP_ENTER, K_RETURN]:
 					self.press_focused()
+				if event.key == self.keymap.tab:
+					if self.shift:
+						self.tab_left()
+					else:
+						self.tab_right()
+				elif event.key == self.keymap.right:
+					self.item_right()
 				elif event.key == self.keymap.left:
-					self.tab_left()
+					self.item_left()
 				elif event.key == self.keymap.up:
-					self.tab_up()
+					self.item_up()
 				elif event.key == self.keymap.down:
-					self.tab_down()
+					self.item_down()
 
 	def add(self, elem):
-		global elements
 		container.add(self, elem)
+		self.focus_grid = elem.get_focus_grid()
 		elem.set_gui(self)
-		elements[0].focus()
+		for y in range(self.focus_grid.h):
+			for x in range(self.focus_grid.w):
+				if self.focus_grid[x][y]:
+					self.focus_grid[x][y].focus_coords = (x,y)
+		self.focus_grid.item(self.focus_coords).focus()
+		added = []
+		for y in range(self.focus_grid.h):
+			for x in range(self.focus_grid.w):
+				item = self.focus_grid.item((x, y))
+				print item.id,
+				if item.id not in added:
+					item.tab_order = len(self.tabs)
+					self.tabs.append((x, y))
+					added.append(item.id)
 
 	def get_element(self, elem_id):
 		global elements
 		return elements[elem_id]
 
-	def set_focus(self, elem_id):
-		global elements
-		if self.focus_id != None and elem_id != self.focus_id:
-			elements[self.focus_id].blur()
-		self.focus_id = elem_id
+	def set_focus(self, focus_coords):
+		old_focus = self.focus_grid.item(self.focus_coords)
+		new_focus = self.focus_grid.item(focus_coords)
+		if self.focus_coords != None and old_focus != new_focus:
+			self.focus_grid.item(self.focus_coords).blur()
+		new_focus.focus_coords = focus_coords
+		self.focus_coords = focus_coords
 
-	def tab(self, next_element, options={}):
-		next_element.focus(options)
+	def tab(self, focus_coords, options={}):
+		#self.focus_coords = focus_coords
+		self.focus_grid.item(focus_coords).focus()
+		self.set_focus(focus_coords)
 
 	def tab_right(self):
-		global elements
-		focused = elements[self.focus_id]
-		right = focused.element_right()
-		self.tab(right, {"v_focus_idx": self.v_focus_idx})
+		next_tab_id = self.focus_grid.item(self.focus_coords).tab_order+1
+		if next_tab_id == len(self.tabs):
+			next_tab_id = 0
+		self.tab(self.tabs[next_tab_id])
 
 	def tab_left(self):
-		global elements
-		focused = elements[self.focus_id]
-		left = focused.element_left()
-		self.tab(left, {"v_focus_idx": self.v_focus_idx})
+		next_tab_id = self.focus_grid.item(self.focus_coords).tab_order-1
+		if next_tab_id < 0:
+			next_tab_id = len(self.tabs)-1
+		self.tab(self.tabs[next_tab_id])
 
-	def tab_up(self):
-		if self.focus_id == None:
-			return
-		global elements
-		focused = elements[self.focus_id]
-		above = focused.element_above()
-		self.tab(above, {"h_focus_idx": self.h_focus_idx})
+	def item_right(self):
+		current_id = self.focus_grid.item(self.focus_coords).id
+		focus_coords = self.focus_coords
+		for i in range(self.focus_grid.w):
+			focus_coords = self.focus_grid.next_coords_from(focus_coords, "right")
+			if self.focus_grid.item(focus_coords).id != current_id:
+				self.tab(focus_coords)
+				break
 
-	def tab_down(self):
-		if self.focus_id == None:
-			return
-		global elements
-		focused = elements[self.focus_id]
-		below = focused.element_below()
-		self.tab(below, {"h_focus_idx": self.h_focus_idx})
+	def item_left(self, tab=False):
+		current_id = self.focus_grid.item(self.focus_coords).id
+		focus_coords = self.focus_coords
+		for i in range(self.focus_grid.w):
+			focus_coords = self.focus_grid.next_coords_from(focus_coords, "left")
+			if self.focus_grid.item(focus_coords).id != current_id:
+				self.tab(focus_coords)
+				break
+
+	def item_up(self):
+		current_id = self.focus_grid.item(self.focus_coords).id
+		focus_coords = self.focus_coords
+		for i in range(self.focus_grid.w):
+			focus_coords = self.focus_grid.next_coords_from(focus_coords, "up")
+			if self.focus_grid.item(focus_coords).id != current_id:
+				self.tab(focus_coords)
+				break
+
+	def item_down(self):
+		current_id = self.focus_grid.item(self.focus_coords).id
+		focus_coords = self.focus_coords
+		for i in range(self.focus_grid.w):
+			focus_coords = self.focus_grid.next_coords_from(focus_coords, "down")
+			if self.focus_grid.item(focus_coords).id != current_id:
+				self.tab(focus_coords)
+				break
 
 	def next_element(self):
 		return None

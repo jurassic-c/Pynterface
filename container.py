@@ -1,5 +1,6 @@
 from element import *
 import gui
+from grid import *
 
 class container(element):
 	child_elements = None
@@ -9,7 +10,9 @@ class container(element):
 	def __init__(self):
 		self.child_elements = []
 		self.child_ids = {}
+		self.focus_grid = []
 		element.__init__(self)
+		self.focus_grid = grid()
 
 	def add(self, elem):
 		elem.parent = self
@@ -29,22 +32,23 @@ class container(element):
 	def move(self, x, y):
 		element.move(self, x, y)
 		for child in self.child_elements:
-			child.move(x+child.rect.x, y+child.rect.y)
+			child.move(child.local_x, child.local_y)
 
 	def focus(self, options={}):
 		if not len(self.child_elements):
 			return
+		focused_id = self.focused_id
 		if options.has_key("child_id"):
-			self.focused_id = options["child_id"]
+			focused_id = options["child_id"]
 		if options.has_key("element_id"):
-			self.focused_id = self.child_ids[options["element_id"]]
+			focused_id = self.child_ids[options["element_id"]]
 		if options.has_key("first_child"):
-			self.focused_id = 0
+			focused_id = 0
 		if options.has_key("last_child"):
-			self.focused_id = -1
-		if self.focused_id > len(self.child_elements) -1:
-			self.focused_id = len(self.child_elements) -1
-		self.child_elements[self.focused_id].focus(options)
+			focused_id = -1
+		if focused_id > len(self.child_elements) -1:
+			focused_id = len(self.child_elements) -1
+		self.child_elements[focused_id].focus(options)
 
 	def set_focus(self, element_id):
 		self.focused_id = self.child_ids[element_id]

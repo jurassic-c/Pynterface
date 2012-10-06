@@ -17,25 +17,25 @@ class clickable:
 			return
 		for event in events:
 			if event.type == MOUSEBUTTONDOWN:
-				if self.onMouseDown and self.rect.collidepoint(event.pos):
-					self.pressed = True
-					self.onMouseDown(self, event)
+				if self.rect.collidepoint(event.pos):
+					self.press()
 			elif event.type == MOUSEBUTTONUP:
 				if self.pressed:
-					if self.onMouseUp:
-						self.onMouseUp(self, event)
-					if self.onClick and self.rect.collidepoint(event.pos):
-						self.onClick(self, event)
-					self.pressed = False
+					click = False
+					if self.rect.collidepoint(event.pos):
+						click = True
+					self.unpress(click)
 
 	def press(self):
 		self.pressed = True
 		if self.onMouseDown:
+			self.focus()
+			self.gui.set_focus(self.focus_coords)
 			self.onMouseDown(self, None)
 
-	def unpress(self):
+	def unpress(self, do_click=False):
 		self.pressed = False
 		if self.onMouseUp:
 			self.onMouseUp(self, None)
-		if self.onClick:
+		if do_click and self.onClick:
 			self.onClick(self, None)

@@ -1,8 +1,12 @@
+from grid import *
+
 class element:
 	gui = None
 	rect = None
 	state = ""
 	parent = None
+	local_x = 0
+	local_y = 0
 	id = 0
 
 	options = None
@@ -11,8 +15,15 @@ class element:
 	onFocus = None
 	onBlur = None
 
+	focus_grid = None
+	focus_coords = None
+
+	tab_order = 0
+
 	def __init__(self):
 		self.options = {"focused": {}}
+		self.focus_grid = grid()
+		self.focus_grid.set(0,0, self)
 
 	def draw(self, events):
 		pass
@@ -21,6 +32,11 @@ class element:
 		self.gui = gui
 
 	def move(self, x, y):
+		self.local_x = x
+		self.local_y = y
+		if self.parent:
+			x = self.parent.rect.x + self.local_x
+			y = self.parent.rect.y + self.local_y
 		self.rect.x = x
 		self.rect.y = y
 
@@ -33,7 +49,6 @@ class element:
 			self.onFocus(self)
 		self.focused = True
 		self.parent.set_focus(self.id)
-		self.gui.set_focus(self.id)
 
 	def blur(self):
 		if self.focused and self.onBlur:
@@ -51,3 +66,6 @@ class element:
 
 	def element_below(self):
 		return self.parent.element_below(self.id)
+
+	def get_focus_grid(self):
+		return self.focus_grid

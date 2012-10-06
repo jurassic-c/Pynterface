@@ -9,11 +9,18 @@ class vbox(container):
 		container.__init__(self)
 
 	def add(self, elem):
-		elem.move(self.rect.x, self.rect.y + self.rect.h + self.padding*len(self.child_elements))
+		container.add(self, elem)
+		padding = self.padding
+		if len(self.child_elements)-1 < 1:
+			padding = 0
+		elem.move(0, self.rect.h + padding)
 		if elem.rect.w > self.rect.w:
 			self.resize(elem.rect.w, self.rect.h)
-		self.resize(elem.rect.w, self.rect.h + elem.rect.h)
-		container.add(self, elem)
+		self.resize(self.rect.w, elem.rect.h + self.rect.h + padding)
+		if len(self.child_elements) > 1:
+			self.focus_grid.add_bottom(elem.get_focus_grid())
+		else:
+			self.focus_grid = elem.get_focus_grid()
 
 	def focus(self, options={}):
 		if options.has_key("v_focus_idx"):
@@ -41,3 +48,24 @@ class vbox(container):
 	def set_focus(self, element_id):
 		container.set_focus(self, element_id)
 		self.gui.v_focus_idx = self.focused_id
+
+	def get_focus_grid(self):
+		new_grid = grid()
+		for y in range(self.focus_grid.h):
+			new_row = []
+			old_row = self.focus_grid.get_row(y)
+			for item in old_row:
+				if item != None:
+					new_row.append(item)
+			if len(new_row) < self.focus_grid.w:
+				repeat = self.focus_grid.w / len(new_row)
+				tmp = []
+				for i in new_row:
+					for r in range(repeat):
+						tmp.append(i)
+				for i in range(self.focus_grid.w%len(new_row)):
+					tmp.append(new_row[-1])
+				new_row = tmp
+			for i in range(len(new_row)):
+				new_grid.set(i, y, new_row[i])
+		return new_grid
