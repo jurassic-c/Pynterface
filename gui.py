@@ -25,17 +25,25 @@ class gui(container):
 	tabs = None
 	tab_idx = 0
 
+	frame_time = 0
+
+	mouse_pos = None
+
 	def __init__(self, surface):
 		container.__init__(self)
 		self.surface = surface
 		self.keymap = keymap()
 		self.focus_coords = (0,0)
 		self.tabs = []
+		self.mouse_pos = (0,0)
 
-	def draw(self, events):
+	def draw(self, events, frame_time):
+		self.frame_time = frame_time
 		for child in self.child_elements:
 			child.draw(events)
 		for event in events:
+			if event.type == MOUSEMOTION:
+				self.mouse_pos = event.pos
 			if event.type == KEYUP:
 				if event.key in [K_LSHIFT, K_RSHIFT]:
 					self.shift = False
@@ -161,11 +169,9 @@ class gui(container):
 		return None
 
 	def press_focused(self):
-		global elements
-		focused = elements[self.focus_id]
+		focused = self.focus_grid.item(self.focus_coords)
 		focused.press()
 
 	def unpress_focused(self):
-		global elements
-		focused = elements[self.focus_id]
-		focused.unpress()
+		focused = self.focus_grid.item(self.focus_coords)
+		focused.unpress(1)

@@ -21,7 +21,8 @@ class element:
 	tab_order = 0
 
 	def __init__(self):
-		self.options = {"focused": {}}
+		self.options = {}
+		self.options["focused"] = {}
 		self.focus_grid = grid()
 		self.focus_grid.set(0,0, self)
 
