@@ -18,6 +18,8 @@ Members
 
  - **options**: A python Dict object used to store options for the element's various states.
 
+ - **focus_grid** : A local focus grid. In the case of a simple element, the focus grid will be a 1x1 grid containing only a reference to the element. In the case of something more complex like an hbox or a vbox, this will likely be a grid containing the relative positions of all child elements.
+
  - **focus_coords**: The coordinates of the element on the Focus Grid.
 
  - **tab_order**: The element's tab order. This is set automatically. Currently, overriding it will do nothing.
@@ -41,7 +43,7 @@ Methods
 
  - **resize**(*self*, *w*, *h*): Resizes element to *w* x *h*.
 
- - **focus**(*self*, *options={}*): Gives focus to element. If *onFocus* is set, it will be executed. Also alerts the parent gui object to blur the previously focused element.
+ - **focus**(*self*, *options={}*): Gives focus to element. If *onFocus* is set, it will be executed.
 
  - **blur**(*self*): Removes focus from element. If *onBlur* is set, it will be executed.
 

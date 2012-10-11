@@ -132,7 +132,7 @@ class gui(container):
 				self.tab(focus_coords)
 				break
 
-	def item_left(self, tab=False):
+	def item_left(self):
 		current_id = self.focus_grid.item(self.focus_coords).id
 		focus_coords = self.focus_coords
 		for i in range(self.focus_grid.w):
