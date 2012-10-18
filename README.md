@@ -46,21 +46,21 @@ Current Features and Functionality
 
 ### Element ###
  - positioning relative to parent
- - *onFocus* and *onBlur* callbacks
+ - allows for binding to FOCUS and BLUR events.
 
 ### Clickable ###
  - Adjustable double click timeout
  - *press()* and *unpress()* methods to simulate a click
- - Callbacks for:
- - - onClick
- - - onDoubleClick
- - - onMouseDown
- - - onMouseUp
+ - Event bindings for:
+ - - CLICK
+ - - DOUBLECLICK
+ - - MOUSEBUTTONDOWN
+ - - MOUSEBUTTONUP
 
 ### Hoverable ###
- - Callbacks for:
- - - onMouseOver
- - - onMouseOut
+ - Event bindings for:
+ - - MOUSEOVER
+ - - MOUSEOUT
 
 ### Container ###
  - Holds child elements
@@ -82,6 +82,7 @@ Example button class, actually used in the development process and in other exam
 
 	from Pynterface import *
 	import pygame
+	from pygame.locals import *
 
 	class button(element, clickable, hoverable):
 		filled = True
@@ -91,6 +92,11 @@ Example button class, actually used in the development process and in other exam
 			element.__init__(self)
 			clickable.__init__(self)
 			hoverable.__init__(self)
+
+		def set_gui(self, gui):
+			element.set_gui(self, gui)
+			clickable.set_gui(self, gui)
+			hoverable.set_gui(self, gui)
 
 		def draw(self, events):
 			rectSurf = pygame.Surface((self.rect.w, self.rect.h))
@@ -115,7 +121,6 @@ Example button class, actually used in the development process and in other exam
 			element.draw(self, events)
 			clickable.draw(self, events)
 			hoverable.draw(self, events)
-
 
 [1]: https://github.com/jurassic-c/Pynterface/issues
 [2]: http://github.com/github/markup/pulls
