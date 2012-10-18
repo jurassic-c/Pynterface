@@ -2,6 +2,8 @@ import pygame
 from pygame.locals import *
 from container import *
 from keymap import *
+from events import *
+from event_manager import *
 
 elements = []
 def get_id(elem):
@@ -36,45 +38,15 @@ class gui(container):
 		self.focus_coords = (0,0)
 		self.tabs = []
 		self.mouse_pos = (0,0)
+		self.eventmgr.bind(MOUSEMOTION, self._on_mouse_motion)
+		self.eventmgr.bind(KEYDOWN, self._on_keydown)
+		self.eventmgr.bind(KEYUP, self._on_keyup)
 
 	def draw(self, events, frame_time):
 		self.frame_time = frame_time
+		self.eventmgr.run(events)
 		for child in self.child_elements:
 			child.draw(events)
-		for event in events:
-			if event.type == MOUSEMOTION:
-				self.mouse_pos = event.pos
-			if event.type == KEYUP:
-				if event.key in [K_LSHIFT, K_RSHIFT]:
-					self.shift = False
-				if event.key in [K_LCTRL, K_RCTRL]:
-					self.ctrl = False
-				if event.key in [K_LALT, K_RALT]:
-					self.alt = False
-				if event.key in [K_KP_ENTER, K_RETURN]:
-					self.unpress_focused()
-			elif event.type == KEYDOWN:
-				if event.key in [K_LSHIFT, K_RSHIFT]:
-					self.shift = True
-				if event.key in [K_LCTRL, K_RCTRL]:
-					self.ctrl = True
-				if event.key in [K_LALT, K_RALT]:
-					self.alt = True
-				if event.key in [K_KP_ENTER, K_RETURN]:
-					self.press_focused()
-				if event.key == self.keymap.tab:
-					if self.shift:
-						self.tab_left()
-					else:
-						self.tab_right()
-				elif event.key == self.keymap.right:
-					self.item_right()
-				elif event.key == self.keymap.left:
-					self.item_left()
-				elif event.key == self.keymap.up:
-					self.item_up()
-				elif event.key == self.keymap.down:
-					self.item_down()
 
 	def add(self, elem):
 		container.add(self, elem)
@@ -175,3 +147,39 @@ class gui(container):
 	def unpress_focused(self):
 		focused = self.focus_grid.item(self.focus_coords)
 		focused.unpress(1)
+
+	def _on_mouse_motion(self, event):
+		self.mouse_pos = event.pos
+
+	def _on_keydown(self, event):
+		if event.key in [K_LSHIFT, K_RSHIFT]:
+			self.shift = True
+		if event.key in [K_LCTRL, K_RCTRL]:
+			self.ctrl = True
+		if event.key in [K_LALT, K_RALT]:
+			self.alt = True
+		if event.key in [K_KP_ENTER, K_RETURN]:
+			self.press_focused()
+		if event.key == self.keymap.tab:
+			if self.shift:
+				self.tab_left()
+			else:
+				self.tab_right()
+		elif event.key == self.keymap.right:
+			self.item_right()
+		elif event.key == self.keymap.left:
+			self.item_left()
+		elif event.key == self.keymap.up:
+			self.item_up()
+		elif event.key == self.keymap.down:
+			self.item_down()
+
+	def _on_keyup(self, event):
+		if event.key in [K_LSHIFT, K_RSHIFT]:
+			self.shift = False
+		if event.key in [K_LCTRL, K_RCTRL]:
+			self.ctrl = False
+		if event.key in [K_LALT, K_RALT]:
+			self.alt = False
+		if event.key in [K_KP_ENTER, K_RETURN]:
+			self.unpress_focused()

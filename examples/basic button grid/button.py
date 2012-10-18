@@ -11,6 +11,11 @@ class button(element, clickable, hoverable):
 		clickable.__init__(self)
 		hoverable.__init__(self)
 
+	def set_gui(self, gui):
+		element.set_gui(self, gui)
+		clickable.set_gui(self, gui)
+		hoverable.set_gui(self, gui)
+
 	def draw(self, events):
 		rectSurf = pygame.Surface((self.rect.w, self.rect.h))
 		width = 0

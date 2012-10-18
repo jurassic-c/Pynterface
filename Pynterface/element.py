@@ -1,4 +1,7 @@
 from grid import *
+from events import *
+from event_manager import *
+import pygame.event
 
 class element:
 	gui = None
@@ -8,12 +11,11 @@ class element:
 	local_x = 0
 	local_y = 0
 	id = 0
+	eventmgr = None
 
 	options = None
 
 	focused = False
-	onFocus = None
-	onBlur = None
 
 	focus_grid = None
 	focus_coords = None
@@ -25,9 +27,16 @@ class element:
 		self.options["focused"] = {}
 		self.focus_grid = grid()
 		self.focus_grid.set(0,0, self)
+		self.eventmgr = event_manager()
 
 	def draw(self, events):
 		pass
+
+	def bind(self, event, callback):
+		return self.eventmgr.bind(event, callback)
+
+	def unbind(self, callback_id):
+		self.eventmgr.unbind(callback_id)
 
 	def set_gui(self, gui):
 		self.gui = gui
@@ -46,14 +55,14 @@ class element:
 		self.rect.h = h
 
 	def focus(self, options={}):
-		if not self.focused and self.onFocus:
-			self.onFocus(self)
+		if not self.focused:
+			self.eventmgr.run([pygame.event.Event(FOCUS, {"elem": self})])
 		self.focused = True
 		self.parent.set_focus(self.id)
 
 	def blur(self):
-		if self.focused and self.onBlur:
-			self.onBlur(self)
+		if self.focused:
+			self.eventmgr.run([pygame.event.Event(BLUR, {"elem": self})])
 		self.focused = False
 
 	def element_right(self):
