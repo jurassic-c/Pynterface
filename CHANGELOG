@@ -1,3 +1,7 @@
+0.5.0
+=====
+ - Changed events to now use binding with an event manager. This allows for one event to have an arbitrary number of callbacks associated with it.
+
 0.4.5
 =====
  - Added CHANGELOG, README and LICENSE
