@@ -24,18 +24,12 @@ Members
 
  - **tab_order**: The element's tab order. This is set automatically. Currently, overriding it will do nothing.
 
- - **onFocus**: A callback which is called when the element receives focus. This callback should accept two arguments:
- - - *elem*: This will be a reference to the element itself.
- - - *event*: A reference to the event which triggered the calling of the callback.
-
- - **onBlur**: A callback which is called when the element loses focus. This callback should accept two arguments:
- - - *elem*: This will be a reference to the element itself.
- - - *event*: A reference to the event which triggered the calling of the callback.
-
 Methods
 -------
 
  - **draw**(*self*, *events*): called by it's parent element when it's time to draw all of the UI elements. This function is designed to be overridden with your own functionality.
+
+ - **bind**(*self*, *event*, *callback*): Binds the specified callback to a specifed element event. Event definitions are located in Pynterface/events.py. The callback must accept as its only argument a reference to the event which triggered it.
 
  - **set_gui**(*self*, *gui*): Called automatically by it's parent element, it sets the gui object.
 
@@ -54,3 +48,9 @@ Methods
  - **element_above**(*self*): Returns the element above this element, if any. None if there isn't one.
 
  - **element_below**(*self*): Returns the element below this element, if any. None if there isn't one.
+
+Events
+-------
+
+ - FOCUS
+ - BLUR

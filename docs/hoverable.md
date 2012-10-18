@@ -6,17 +6,17 @@ This class is used to extend an element. It adds mouse over and mouse out functi
 Members
 -------
 
- - **enabled**: Boolean
-
- - **onMouseOver**: A reference to a callback, executed when a mouse over event for this element is fired. Callback should accept two arguments:
- - - *elem*: A reference to the element
- - - *event*: A reference to the event
-
- - **onMouseOut**: A reference to a callback, executed when a mouse out event for this element is fired. Callback should accept two arguments:
- - - *elem*: A reference to the element
- - - *event*: A reference to the event
+ - **hover_enabled**: Boolean
 
 Methods
 -------
 
+ - **set_gui**(*self*, *gui*): Sets up the bindings for mouse events. Must be called by set_gui method of any derived classes.
+
  - **draw**(*self*, *events*): Overrides draw method of element class to provide hover functionality. Be sure to call this draw method from the draw methods of your derived classes.
+
+Event
+-----
+ - MOUSEOVER
+
+ - MOUSEOUT
