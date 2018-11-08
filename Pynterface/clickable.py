@@ -23,8 +23,7 @@ class clickable:
 		if self.pressed and not self.mouse_button_down:
 			self.double_click_timer+= self.gui.frame_time
 			if self.double_click_timer > self.double_click_timeout:
-				if self.rect.collidepoint(self.gui.mouse_pos) and self.click_enabled:
-					self.unpress(1)
+				self.unpress(1)
 
 	def double_click(self):
 		self.pressed = False

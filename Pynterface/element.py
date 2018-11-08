@@ -1,7 +1,10 @@
 from grid import *
 from events import *
 from event_manager import *
+from nineslice import Nineslice
 import pygame.event
+import pygame.image
+import pygame.rect
 
 class element:
 	gui = None
@@ -12,6 +15,10 @@ class element:
 	local_y = 0
 	id = 0
 	eventmgr = None
+	image_surf = None
+	image_rect = None
+	image_surfaces = None
+	image_path = ""
 
 	options = None
 
@@ -28,9 +35,30 @@ class element:
 		self.focus_grid = grid()
 		self.focus_grid.set(0,0, self)
 		self.eventmgr = event_manager()
+		self.image_surfaces = {}
 
 	def draw(self, events):
-		pass
+		self.setup_default_image()
+
+
+	def setup_default_image(self):
+		opt_val = ""
+		if self.options.has_key("image"):
+			opt_val = self.options["image"]
+		if self.image_path == opt_val:
+			return
+		self.image_path = self.options["image"]
+		if not self.image_path:
+			self.image_surfaces["default"] = None
+			return
+		if self.options.has_key("nineslice_radius"):
+			radius = self.options["nineslice_radius"]
+
+		image_surf = pygame.image.load(self.options["image"])
+		image_rect = image_surf.get_rect()
+		nineslice = Nineslice(image_surf, self.options["nineslice_radius"])
+		self.image_surfaces["default"] = pygame.Surface((self.rect.width, self.rect.height))
+		nineslice.apply_to_surface(self.image_surfaces["default"])
 
 	def bind(self, event, callback):
 		return self.eventmgr.bind(event, callback)

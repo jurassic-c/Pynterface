@@ -27,6 +27,7 @@ class hoverable:
 
 	def _on_mousemotion(self, event):
 		if not self.hover_enabled:
+			self.hover = False
 			return
 		if event.type == MOUSEMOTION:
 			if self.rect.collidepoint(event.pos):

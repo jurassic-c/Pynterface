@@ -21,12 +21,20 @@ def doclick(event):
 
 def doubleclick(event):
 	elem = event.elem
-	if elem.filled:
-		elem.filled = False
-		elem.hover_enabled = False
-	else:
-		elem.filled = True
+	pinned = False
+	if elem.options.has_key("pinned"):
+		pinned = elem.options["pinned"]
+	if pinned:
+		elem.options["pinned"] = False
 		elem.hover_enabled = True
+		elem.options["image"] = "assets/button.png"
+		elem.options["focused"]["image"] = "assets/button_focused.png"
+	else:
+		elem.options["pinned"] = True
+		elem.hover_enabled = False
+		elem.hover = False
+		elem.options["image"] = "assets/button_pinned.png"
+		elem.options["focused"]["image"] = "assets/button_pinned.png"
 
 def focus(event):
 	pass
@@ -44,10 +52,18 @@ def get_button(w, h, color=(122,0,0)):
 	bttn.bind(DOUBLECLICK, doubleclick)
 	bttn.bind(FOCUS, focus)
 	bttn.bind(BLUR, blur)
-	bttn.options["color"] = color
-	bttn.options["focused"]["color"] = (122, 50, 50)
-	bttn.options["pressed"]["color"] = (0, 0, 122)
-	bttn.options["hover"]["color"] = (0, 0, 255)
+	bttn.options["image"] = "assets/button.png";
+	bttn.options["hover"]["image"] = "assets/button_hover.png";
+	bttn.options["pressed"]["image"] = "assets/button_pressed.png";
+	bttn.options["focused"]["image"] = "assets/button_focused.png";
+	bttn.options["nineslice_radius"] = 5
+#	bttn.options["color"] = color
+#	bttn.options["focused"]["color"] = (122, 50, 50)
+#	bttn.options["pressed"]["color"] = (0, 0, 122)
+#	bttn.options["hover"]["color"] = (0, 0, 0, 0)
+#	bttn.options["focused"]["image"] = (122, 50, 50)
+#	bttn.options["pressed"]["color"] = (0, 0, 122)
+#	bttn.options["hover"]["color"] = (0, 0, 0, 0)
 	return bttn
 
 pygame.init()

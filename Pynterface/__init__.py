@@ -8,3 +8,4 @@ from vbox import *
 from grid import *
 from events import *
 from event_manager import *
+from nineslice import *
