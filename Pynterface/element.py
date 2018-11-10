@@ -51,14 +51,17 @@ class element:
 		if not self.image_path:
 			self.image_surfaces["default"] = None
 			return
-		if self.options.has_key("nineslice_radius"):
-			radius = self.options["nineslice_radius"]
 
 		image_surf = pygame.image.load(self.options["image"])
 		image_rect = image_surf.get_rect()
-		nineslice = Nineslice(image_surf, self.options["nineslice_radius"])
-		self.image_surfaces["default"] = pygame.Surface((self.rect.width, self.rect.height))
-		nineslice.apply_to_surface(self.image_surfaces["default"])
+		self.image_surfaces["default"] = image_surf
+		
+		if self.options.has_key("nineslice_radius"):
+			radius = self.options["nineslice_radius"]
+			self.image_surfaces["default"] = pygame.Surface((self.rect.width, self.rect.height))
+			nineslice = Nineslice(image_surf, self.options["nineslice_radius"])
+			nineslice.apply_to_surface(self.image_surfaces["default"])
+
 
 	def bind(self, event, callback):
 		return self.eventmgr.bind(event, callback)

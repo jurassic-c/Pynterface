@@ -30,35 +30,72 @@ class button(element, clickable, hoverable):
 
 		color = (122, 0, 0)
 		is_default = True
+		image_position = "center"
+		if self.options.has_key("image_position"):
+			image_position = self.options["image_position"]
 		if self.options.has_key("color"):
 			color = self.options["color"]
 		if self.focused:
 			is_default = False
 			if self.options["focused"].has_key("color"):
 				color = self.options["focused"]["color"]
-				print "COLOR: %s" % color
 			if self.image_surfaces.has_key("focused"):
-				rectSurf.blit(self.image_surfaces["focused"], self.image_surfaces["focused"].get_rect())
+				rectSurf.blit(self.image_surfaces["focused"], self.get_image_position_rect(self.image_surfaces["focused"], self.rect, image_position))
 		if self.hover:
 			is_default = False
 			if self.options["hover"].has_key("color"):
 				color = self.options["hover"]["color"]
 			if self.image_surfaces.has_key("hover"):
-				rectSurf.blit(self.image_surfaces["hover"], self.image_surfaces["hover"].get_rect())
+				rectSurf.blit(self.image_surfaces["hover"], self.get_image_position_rect(self.image_surfaces["hover"], self.rect, image_position))
 		if self.pressed:
 			is_default = False
 			if self.options["pressed"].has_key("color"):
 				color = self.options["pressed"]["color"]
 			if self.image_surfaces.has_key("pressed"):
-				rectSurf.blit(self.image_surfaces["pressed"], self.image_surfaces["pressed"].get_rect())
+				rectSurf.blit(self.image_surfaces["pressed"], self.get_image_position_rect(self.image_surfaces["pressed"], self.rect, image_position))
+
 		if self.image_surfaces.has_key("default") and is_default:
-			pygame.draw.rect(rectSurf, color, pygame.Rect(0, 0, self.rect.width, self.rect.height), width)
-			rectSurf.blit(self.image_surfaces["default"], self.image_surfaces["default"].get_rect())
+			if not self.options.has_key("image"):
+				pygame.draw.rect(rectSurf, color, pygame.Rect(0, 0, self.rect.width, self.rect.height), width)
+			rectSurf.blit(self.image_surfaces["default"], self.get_image_position_rect(self.image_surfaces["default"], self.rect, image_position))
 		self.gui.surface.blit(rectSurf, self.rect)
 
 		element.draw(self, events)
 		clickable.draw(self, events)
 		hoverable.draw(self, events)
+
+	def get_image_position_rect(self, image_surf, target_rect, position="center"):
+		top = 0
+		left = 0
+		image_rect = image_surf.get_rect()
+		if position == "top_left":
+			left = 0
+			top = 0
+		elif position == "top":
+			left = abs(target_rect.width - image_rect.w) / 2
+			top = 0
+		elif position == "top_right":
+			left = abs(target_rect.width - image_rect.w)
+			top = 0
+		elif position == "left":
+			left = 0
+			top = abs(target_rect.height - image_rect.h) / 2
+		elif position == "center":
+			left = abs(target_rect.width - image_rect.w) / 2
+			top = abs(target_rect.height - image_rect.h) / 2
+		elif position == "right":
+			left = abs(target_rect.width - image_rect.w)
+			top = abs(target_rect.height - image_rect.h) / 2
+		elif position == "bottom_left":
+			left = 0
+			top = abs(target_rect.height - image_rect.h)
+		elif position == "bottom":
+			left = abs(target_rect.width - image_rect.w) / 2
+			top = abs(target_rect.height - image_rect.h)
+		elif position == "bottom_right":
+			left = abs(target_rect.width - image_rect.w)
+			top = abs(target_rect.height - image_rect.h)
+		return (left, top)
 
 	def setup_hover_image(self):
 		opt_val = ""
@@ -71,14 +108,15 @@ class button(element, clickable, hoverable):
 			del self.image_surfaces["hover"]
 			return
 
-		if self.options.has_key("nineslice_radius"):
-			radius = self.options["nineslice_radius"]
-
 		image_surf = pygame.image.load(self.options["hover"]["image"])
 		image_rect = image_surf.get_rect()
-		nineslice = Nineslice(image_surf, self.options["nineslice_radius"])
-		self.image_surfaces["hover"] = pygame.Surface((self.rect.width, self.rect.height))
-		nineslice.apply_to_surface(self.image_surfaces["hover"])
+		self.image_surfaces["hover"] = image_surf
+
+		if self.options.has_key("nineslice_radius"):
+			radius = self.options["nineslice_radius"]
+			nineslice = Nineslice(image_surf, self.options["nineslice_radius"])
+			self.image_surfaces["hover"] = pygame.Surface((self.rect.width, self.rect.height))
+			nineslice.apply_to_surface(self.image_surfaces["hover"])
 
 	def setup_pressed_image(self):
 		opt_val = ""
@@ -91,14 +129,15 @@ class button(element, clickable, hoverable):
 			del self.image_surfaces["pressed"]
 			return
 
-		if self.options.has_key("nineslice_radius"):
-			radius = self.options["nineslice_radius"]
-
 		image_surf = pygame.image.load(self.options["pressed"]["image"])
 		image_rect = image_surf.get_rect()
-		nineslice = Nineslice(image_surf, self.options["nineslice_radius"])
-		self.image_surfaces["pressed"] = pygame.Surface((self.rect.width, self.rect.height))
-		nineslice.apply_to_surface(self.image_surfaces["pressed"])
+		self.image_surfaces["pressed"] = image_surf
+
+		if self.options.has_key("nineslice_radius"):
+			radius = self.options["nineslice_radius"]
+			nineslice = Nineslice(image_surf, self.options["nineslice_radius"])
+			self.image_surfaces["pressed"] = pygame.Surface((self.rect.width, self.rect.height))
+			nineslice.apply_to_surface(self.image_surfaces["pressed"])
 
 	def setup_focused_image(self):
 		opt_val = ""
@@ -111,11 +150,12 @@ class button(element, clickable, hoverable):
 			del self.image_surfaces["focused"]
 			return
 
-		if self.options.has_key("nineslice_radius"):
-			radius = self.options["nineslice_radius"]
-
 		image_surf = pygame.image.load(self.options["focused"]["image"])
 		image_rect = image_surf.get_rect()
-		nineslice = Nineslice(image_surf, self.options["nineslice_radius"])
-		self.image_surfaces["focused"] = pygame.Surface((self.rect.width, self.rect.height))
-		nineslice.apply_to_surface(self.image_surfaces["focused"])
+		self.image_surfaces["focused"] = image_surf
+
+		if self.options.has_key("nineslice_radius"):
+			radius = self.options["nineslice_radius"]
+			nineslice = Nineslice(image_surf, self.options["nineslice_radius"])
+			self.image_surfaces["focused"] = pygame.Surface((self.rect.width, self.rect.height))
+			nineslice.apply_to_surface(self.image_surfaces["focused"])
