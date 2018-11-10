@@ -3,7 +3,7 @@ import pygame
 from pygame.locals import *
 import pygame.freetype
 
-class button(element, clickable, hoverable):
+class button(element, clickable, hoverable, textable):
 	filled = True
 	hover_image_path = ""
 	pressed_image_path = ""
@@ -14,7 +14,6 @@ class button(element, clickable, hoverable):
 		element.__init__(self)
 		clickable.__init__(self)
 		hoverable.__init__(self)
-		self.font = pygame.freetype.Font(None, size=10)
 
 	def set_gui(self, gui):
 		element.set_gui(self, gui)
@@ -56,14 +55,16 @@ class button(element, clickable, hoverable):
 			pygame.draw.rect(rectSurf, color, pygame.Rect(0, 0, self.rect.width, self.rect.height), width)
 			rectSurf.blit(self.image_surfaces["default"], self.image_surfaces["default"].get_rect())
 
-		text_surf, text_rect = self.font.render("test message")
-		rectSurf.blit(text_surf, (5,5))
 
+		# Blit Text
+		if self.text:
+			rectSurf.blit(self.text_surf, (0,0));
 		self.gui.surface.blit(rectSurf, self.rect)
 
 		element.draw(self, events)
 		clickable.draw(self, events)
 		hoverable.draw(self, events)
+		textable.draw(self, events)
 
 	def setup_hover_image(self):
 		opt_val = ""
