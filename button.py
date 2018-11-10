@@ -1,6 +1,7 @@
 from Pynterface import *
 import pygame
 from pygame.locals import *
+import pygame.freetype
 
 class button(element, clickable, hoverable):
 	filled = True
@@ -13,6 +14,7 @@ class button(element, clickable, hoverable):
 		element.__init__(self)
 		clickable.__init__(self)
 		hoverable.__init__(self)
+		self.font = pygame.freetype.Font(None, size=10)
 
 	def set_gui(self, gui):
 		element.set_gui(self, gui)
@@ -36,7 +38,6 @@ class button(element, clickable, hoverable):
 			is_default = False
 			if self.options["focused"].has_key("color"):
 				color = self.options["focused"]["color"]
-				print "COLOR: %s" % color
 			if self.image_surfaces.has_key("focused"):
 				rectSurf.blit(self.image_surfaces["focused"], self.image_surfaces["focused"].get_rect())
 		if self.hover:
@@ -54,6 +55,10 @@ class button(element, clickable, hoverable):
 		if self.image_surfaces.has_key("default") and is_default:
 			pygame.draw.rect(rectSurf, color, pygame.Rect(0, 0, self.rect.width, self.rect.height), width)
 			rectSurf.blit(self.image_surfaces["default"], self.image_surfaces["default"].get_rect())
+
+		text_surf, text_rect = self.font.render("test message")
+		rectSurf.blit(text_surf, (5,5))
+
 		self.gui.surface.blit(rectSurf, self.rect)
 
 		element.draw(self, events)
