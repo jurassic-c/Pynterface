@@ -58,7 +58,10 @@ class button(element, clickable, hoverable, textable):
 
 		# Blit Text
 		if self.text:
-			rectSurf.blit(self.text_surf, (0,0));
+			text_position = "center"
+			if self.options.has_key("text_position"):
+				text_position = self.options["text_position"]
+			rectSurf.blit(self.text_surf, self.get_text_position_rect(self.text_surf, self.rect, text_position));
 		self.gui.surface.blit(rectSurf, self.rect)
 
 		element.draw(self, events)
