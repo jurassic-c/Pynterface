@@ -2,7 +2,7 @@ from Pynterface import *
 import pygame
 from pygame.locals import *
 
-class button(element, clickable, hoverable):
+class button(element, clickable, hoverable, textable):
 	filled = True
 	hover_image_path = ""
 	pressed_image_path = ""
@@ -52,17 +52,25 @@ class button(element, clickable, hoverable):
 			if self.options["pressed"].has_key("color"):
 				color = self.options["pressed"]["color"]
 			if self.image_surfaces.has_key("pressed"):
-				rectSurf.blit(self.image_surfaces["pressed"], self.get_image_position_rect(self.image_surfaces["pressed"], self.rect, image_position))
-
+				rectSurf.blit(self.image_surfaces["pressed"],self.get_image_position_rect(self.image_surfaces["pressed"], self.rect, image_position))
 		if self.image_surfaces.has_key("default") and is_default:
 			if not self.options.has_key("image"):
 				pygame.draw.rect(rectSurf, color, pygame.Rect(0, 0, self.rect.width, self.rect.height), width)
-			rectSurf.blit(self.image_surfaces["default"], self.get_image_position_rect(self.image_surfaces["default"], self.rect, image_position))
+			rectSurf.blit(self.image_surfaces["default"],self.get_image_position_rect(self.image_surfaces["default"], self.rect, image_position))
+
+
+		# Blit Text
+		if self.text:
+			text_position = "center"
+			if self.options.has_key("text_position"):
+				text_position = self.options["text_position"]
+			rectSurf.blit(self.text_surf, self.get_text_position_rect(self.text_surf, self.rect, text_position));
 		self.gui.surface.blit(rectSurf, self.rect)
 
 		element.draw(self, events)
 		clickable.draw(self, events)
 		hoverable.draw(self, events)
+		textable.draw(self, events)
 
 	def get_image_position_rect(self, image_surf, target_rect, position="center"):
 		top = 0
