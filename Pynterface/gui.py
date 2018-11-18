@@ -52,6 +52,7 @@ class gui(container):
 		container.add(self, elem)
 		self.focus_grid = elem.get_focus_grid()
 		elem.set_gui(self)
+		elem.set_target_surface(self.surface)
 		for y in range(self.focus_grid.h):
 			for x in range(self.focus_grid.w):
 				if self.focus_grid[x][y]:

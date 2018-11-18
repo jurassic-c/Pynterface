@@ -10,3 +10,4 @@ from events import *
 from event_manager import *
 from nineslice import *
 from textable import *
+from scrollable import *

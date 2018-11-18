@@ -14,6 +14,9 @@ class textable:
     def set_gui(self, gui):
         self.gui = gui
 
+    def set_target_surface(self, surface):
+            pass
+
     def draw(self, events):
         if not self.font:
             font_path = None

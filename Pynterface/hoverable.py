@@ -14,6 +14,9 @@ class hoverable:
 	def set_gui(self, gui):
 		gui.bind(MOUSEMOTION, self._on_mousemotion)
 
+	def set_target_surface(self, surface):
+		pass
+
 	def draw(self, events):
 		pass
 

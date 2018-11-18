@@ -7,8 +7,7 @@ from Pynterface import *
 def rollover(event):
 	print "MOUSEOVER:", event.elem.id
 
-def rollout(event):
-	print "MOUSEOUT:", event.elem.id
+def rollout(event): print "MOUSEOUT:", event.elem.id
 
 def mousedown(event):
 	pass
@@ -136,7 +135,10 @@ hb.add(vb2)
 vb.add(hb)
 main_hb.add(vb)
 
-guiObj.add(main_hb)
+scroll = scrollable(540,250)
+scroll.add(main_hb)
+
+guiObj.add(scroll)
 
 frame_time = 0
 

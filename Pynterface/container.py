@@ -29,6 +29,11 @@ class container(element):
 		for child in self.child_elements:
 			child.set_gui(self.gui)
 
+	def set_target_surface(self, surface):
+		element.set_target_surface(self, surface)
+		for child in self.child_elements:
+			child.set_target_surface(self.target_surface)
+
 	def move(self, x, y):
 		element.move(self, x, y)
 		for child in self.child_elements:

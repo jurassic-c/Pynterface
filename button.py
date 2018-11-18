@@ -18,6 +18,13 @@ class button(element, clickable, hoverable, textable):
 		element.set_gui(self, gui)
 		clickable.set_gui(self, gui)
 		hoverable.set_gui(self, gui)
+		textable.set_gui(self, gui)
+
+	def set_target_surface(self, surface):
+		element.set_target_surface(self, surface)
+		clickable.set_target_surface(self, surface)
+		hoverable.set_target_surface(self, surface)
+		textable.set_target_surface(self, surface)
 
 	def draw(self, events):
 		self.setup_hover_image()
@@ -65,7 +72,7 @@ class button(element, clickable, hoverable, textable):
 			if self.options.has_key("text_position"):
 				text_position = self.options["text_position"]
 			rectSurf.blit(self.text_surf, self.get_text_position_rect(self.text_surf, self.rect, text_position));
-		self.gui.surface.blit(rectSurf, self.rect)
+		self.target_surface.blit(rectSurf, self.rect)
 
 		element.draw(self, events)
 		clickable.draw(self, events)

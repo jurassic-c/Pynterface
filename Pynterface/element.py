@@ -19,6 +19,7 @@ class element:
 	image_rect = None
 	image_surfaces = None
 	image_path = ""
+	target_surface = None
 
 	options = None
 
@@ -71,6 +72,9 @@ class element:
 
 	def set_gui(self, gui):
 		self.gui = gui
+
+	def set_target_surface(self, surface):
+		self.target_surface = surface
 
 	def move(self, x, y):
 		self.local_x = x

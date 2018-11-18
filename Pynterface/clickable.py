@@ -19,6 +19,9 @@ class clickable:
 		gui.eventmgr.bind(MOUSEBUTTONDOWN, self._on_mousebutton_down)
 		gui.eventmgr.bind(MOUSEBUTTONUP, self._on_mousebutton_up)
 
+	def set_target_surface(self, surface):
+		pass
+
 	def draw(self, events):
 		if self.pressed and not self.mouse_button_down:
 			self.double_click_timer+= self.gui.frame_time
@@ -50,6 +53,8 @@ class clickable:
 
 	def _on_mousebutton_down(self, event):
 		if not self.click_enabled:
+			return
+		if event.button != 1:
 			return
 		self.last_pos = event.pos
 		self.mouse_button_down = True
