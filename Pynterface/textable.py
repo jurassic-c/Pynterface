@@ -38,6 +38,15 @@ class textable:
             self.text_surf, self.text_rect = self.font.render(opt_text)
         self.text = opt_text
 
+        # Blit Text
+        if self.text:
+		rectSurf = pygame.Surface((self.rect.w, self.rect.h), SRCALPHA)
+                text_position = "center"
+                if self.options.has_key("text_position"):
+                        text_position = self.options["text_position"]
+                rectSurf.blit(self.text_surf, self.get_text_position_rect(self.text_surf, self.rect, text_position));
+        self.target_surface.blit(rectSurf, self.rect)
+
     def get_text_position_rect(self, image_surf, target_rect, position="center"):
             top = 0
             left = 0

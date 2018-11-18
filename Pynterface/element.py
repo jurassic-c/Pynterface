@@ -39,29 +39,29 @@ class element:
 		self.image_surfaces = {}
 
 	def draw(self, events):
-		self.setup_default_image()
-
-
-	def setup_default_image(self):
 		opt_val = ""
 		if self.options.has_key("image"):
 			opt_val = self.options["image"]
-		if self.image_path == opt_val:
+		self.setup_state_image(opt_val)
+
+
+	def setup_state_image(self, image_path, state="default"):
+		if self.image_path == image_path:
 			return
-		self.image_path = self.options["image"]
+		self.image_path = image_path
 		if not self.image_path:
 			self.image_surfaces["default"] = None
 			return
 
-		image_surf = pygame.image.load(self.options["image"])
+		image_surf = pygame.image.load(image_path)
 		image_rect = image_surf.get_rect()
-		self.image_surfaces["default"] = image_surf
+		self.image_surfaces[state] = image_surf
 		
 		if self.options.has_key("nineslice_radius"):
 			radius = self.options["nineslice_radius"]
-			self.image_surfaces["default"] = pygame.Surface((self.rect.width, self.rect.height))
+			self.image_surfaces[state] = pygame.Surface((self.rect.width, self.rect.height))
 			nineslice = Nineslice(image_surf, self.options["nineslice_radius"])
-			nineslice.apply_to_surface(self.image_surfaces["default"])
+			nineslice.apply_to_surface(self.image_surfaces[state])
 
 
 	def bind(self, event, callback):
