@@ -1,3 +1,12 @@
+###
+# Options:
+#
+# scrollbar_width:				Integer. Width in pixels of the scrollbars. Default 15
+# bg_color:						Pygame Color. Background color to use.
+# fg_color:						Pygame Color. Foreground or handle color to use.
+# fg_image:						String.	Path to Foreground or handle image to use.
+# fg_image_nineslice_radius:	Integer. Nineslice radius to use for foreground image
+#
 import pygame, sys
 from button import *
 from pygame.locals import *
@@ -135,7 +144,9 @@ hb.add(vb2)
 vb.add(hb)
 main_hb.add(vb)
 
-scroll = scrollable(540,250)
+scroll = scrollable(250,250)
+scroll.options["fg_image"] = "assets/scroll_handle.png"
+scroll.options["fg_image_nineslice_radius"] = 6
 scroll.add(main_hb)
 
 guiObj.add(scroll)

@@ -33,31 +33,31 @@ class Nineslice:
 		self.bottom_right = {"rect": pygame.Rect(0,0,radius,radius)}
 
 		# Blit surfaces
-		self.top_left["surf"] = pygame.Surface((radius, radius))
+		self.top_left["surf"] = pygame.Surface((radius, radius), pygame.locals.SRCALPHA)
 		self.top_left["surf"].blit(image_surf, (0,0))
 		
-		self.top["surf"] = pygame.Surface((image_rect.width-(radius*2), radius))
+		self.top["surf"] = pygame.Surface((image_rect.width-(radius*2), radius), pygame.locals.SRCALPHA)
 		self.top["surf"].blit(image_surf, (0-radius,0))
 
-		self.top_right["surf"] = pygame.Surface((radius, radius))
+		self.top_right["surf"] = pygame.Surface((radius, radius), pygame.locals.SRCALPHA)
 		self.top_right["surf"].blit(image_surf, (0-image_rect.w+radius,0))
 
-		self.left["surf"] = pygame.Surface((radius, image_rect.height-(radius*2)))
+		self.left["surf"] = pygame.Surface((radius, image_rect.height-(radius*2)), pygame.locals.SRCALPHA)
 		self.left["surf"].blit(image_surf, (0,0-radius))
 
-		self.center["surf"] = pygame.Surface((image_rect.width-(radius*2), image_rect.height-(radius*2)))
+		self.center["surf"] = pygame.Surface((image_rect.width-(radius*2), image_rect.height-(radius*2)), pygame.locals.SRCALPHA)
 		self.center["surf"].blit(image_surf, (0-radius,0-radius))
 
-		self.right["surf"] = pygame.Surface((radius, image_rect.height-(radius*2)))
+		self.right["surf"] = pygame.Surface((radius, image_rect.height-(radius*2)), pygame.locals.SRCALPHA)
 		self.right["surf"].blit(image_surf, (0-image_rect.width+radius,0-radius))
 
-		self.bottom_left["surf"] = pygame.Surface((radius, radius))
+		self.bottom_left["surf"] = pygame.Surface((radius, radius), pygame.locals.SRCALPHA)
 		self.bottom_left["surf"].blit(image_surf, (0,0-image_rect.height+radius))
 		
-		self.bottom["surf"] = pygame.Surface((image_rect.width-(radius*2), radius))
+		self.bottom["surf"] = pygame.Surface((image_rect.width-(radius*2), radius), pygame.locals.SRCALPHA)
 		self.bottom["surf"].blit(image_surf, (0-radius,0-image_rect.height+radius))
 
-		self.bottom_right["surf"] = pygame.Surface((radius, radius))
+		self.bottom_right["surf"] = pygame.Surface((radius, radius), pygame.locals.SRCALPHA)
 		self.bottom_right["surf"].blit(image_surf, (0-image_rect.w+radius,0-image_rect.height+radius))
 
 	def apply_to_surface(self, surf):
@@ -70,21 +70,39 @@ class Nineslice:
 
 		#### edges
 		# top
-		for i in range((image_rect.width-self.radius) / self.top["rect"].width):
-			surf.blit(self.top["surf"], (self.radius+(i*self.top["rect"].width), 0))
+		for i in range(((image_rect.width-2*self.radius) / self.top["rect"].width)+1):
+			w = self.top["rect"].w
+			if (image_rect.w-2*self.radius) - i*self.top["rect"].w < w:
+				w = (image_rect.w-2*self.radius) - i*self.top["rect"].w
+			surf.blit(self.top["surf"], (self.radius+(i*self.top["rect"].width), 0), (0,0,w,self.top["rect"].h))
 		# left
-		for i in range((image_rect.height-self.radius) / self.left["rect"].height):
-			surf.blit(self.left["surf"], (0,self.radius+(i*self.left["rect"].height)))
+		for i in range(((image_rect.height-2*self.radius) / self.left["rect"].height)+1):
+			h = self.left["rect"].h
+			if (image_rect.h-2*self.radius) - i*self.left["rect"].h < h:
+				h = (image_rect.h-2*self.radius) - i*self.left["rect"].h
+			surf.blit(self.left["surf"], (0,self.radius+(i*self.left["rect"].height)), (0,0,self.left["rect"].w, h))
 		# right
-		for i in range((image_rect.height-self.radius) / self.right["rect"].height):
-			surf.blit(self.right["surf"], (image_rect.width-self.radius,self.radius+(i*self.left["rect"].height)))
+		for i in range(((image_rect.height-2*self.radius) / self.right["rect"].height)+1):
+			h = self.right["rect"].h
+			if (image_rect.h-2*self.radius) - i*self.right["rect"].h < h:
+				h = (image_rect.h-2*self.radius) - i*self.right["rect"].h
+			surf.blit(self.right["surf"], (image_rect.width-self.radius,self.radius+(i*self.left["rect"].height)), (0,0,self.right["rect"].w, h))
 		# bottom
-		for i in range((image_rect.width-self.radius) / self.bottom["rect"].width):
-			surf.blit(self.bottom["surf"], (self.radius+(i*self.top["rect"].width), 0+image_rect.height-self.radius))
+		for i in range(((image_rect.width-2*self.radius) / self.bottom["rect"].width)+1):
+			w = self.bottom["rect"].w
+			if (image_rect.w-2*self.radius) - i*self.bottom["rect"].w < w:
+				w = (image_rect.w-2*self.radius) - i*self.bottom["rect"].w
+			surf.blit(self.bottom["surf"], (self.radius+(i*self.top["rect"].width), 0+image_rect.height-self.radius), (0,0,w, self.bottom["rect"].h))
 
 		#### center
 		
-		for x in range((image_rect.width-self.radius) / self.center["rect"].width):
-			for y in range((image_rect.height-self.radius) / self.center["rect"].height):
-				surf.blit(self.center["surf"], (self.radius+(x*self.center["rect"].width), self.radius+(y*self.center["rect"].height)))
+		for x in range(((image_rect.width-self.radius*2) / self.center["rect"].width)+1):
+			for y in range(((image_rect.height-2*self.radius) / self.center["rect"].height)+1):
+				w = self.center["rect"].w
+				if (image_rect.w-2*self.radius) - x*self.center["rect"].w < w:
+					w = (image_rect.w-2*self.radius) - x*self.center["rect"].w
+				h = self.center["rect"].h
+				if (image_rect.h-2*self.radius) - y*self.center["rect"].h < h:
+					h = (image_rect.h-2*self.radius) - y*self.center["rect"].h
+				surf.blit(self.center["surf"], (self.radius+(x*self.center["rect"].width), self.radius+(y*self.center["rect"].height)), (0,0,w,h))
 
