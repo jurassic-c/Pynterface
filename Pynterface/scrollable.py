@@ -118,7 +118,7 @@ class scrollable(container):
 
 	def draw_vert_scrollbar(self):
 		if self.child_elements[0].rect.h > self.rect.h:
-			scrollbar_surf = pygame.Surface((self.scrollbar_width, self.rect.w*self.show_horiz_multiplier), pygame.locals.SRCALPHA)
+			scrollbar_surf = pygame.Surface((self.scrollbar_width, self.rect.h-self.scrollbar_width*self.show_horiz_multiplier), pygame.locals.SRCALPHA)
 			scrollbar_surf.fill(self.bg_color)
 			self.surf.blit(scrollbar_surf, (self.rect.w-self.scrollbar_width, 0))
 
@@ -138,13 +138,13 @@ class scrollable(container):
 				handle_surf.fill(self.fg_color, (2,2,self.scrollbar_width-4,handle_h-4))
 			y_offset = 0
 			if self.max_y_offset > 0:
-				y_offset = (float(self.y_offset)/float(self.max_y_offset))*(self.rect.h-handle_h-self.scrollbar_width)
+				y_offset = (float(self.y_offset)/float(self.max_y_offset))*(self.rect.h-handle_h-self.scrollbar_width*self.show_horiz_multiplier)
 				
 			self.surf.blit(handle_surf, (self.rect.w-self.scrollbar_width, y_offset))
 
 	def draw_horiz_scrollbar(self):
 		if self.child_elements[0].rect.w > self.rect.w:
-			scrollbar_surf = pygame.Surface((self.rect.w*self.show_vert_multiplier, self.scrollbar_width), pygame.locals.SRCALPHA)
+			scrollbar_surf = pygame.Surface((self.rect.w-self.scrollbar_width*self.show_vert_multiplier, self.scrollbar_width), pygame.locals.SRCALPHA)
 			scrollbar_surf.fill(self.bg_color)
 			self.surf.blit(scrollbar_surf, (0, self.rect.h-self.scrollbar_width))
 
@@ -164,7 +164,7 @@ class scrollable(container):
 				handle_surf.fill(self.fg_color, (2, 2, handle_w-4, self.scrollbar_width-4))
 			x_offset = 0
 			if self.max_x_offset > 0:
-				x_offset = (float(self.x_offset)/float(self.max_x_offset))*(self.rect.w-handle_w-self.scrollbar_width)
+				x_offset = (float(self.x_offset)/float(self.max_x_offset))*(self.rect.w-handle_w-self.scrollbar_width*self.show_vert_multiplier)
 				
 			self.surf.blit(handle_surf, (x_offset, self.rect.h-self.scrollbar_width))
 	def setup_fg_image(self):

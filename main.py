@@ -144,7 +144,8 @@ hb.add(vb2)
 vb.add(hb)
 main_hb.add(vb)
 
-scroll = scrollable(250,250)
+scroll = scrollable(540,250)
+scroll.options["bg_color"] = (128,128,128,128)
 scroll.options["fg_image"] = "assets/scroll_handle.png"
 scroll.options["fg_image_nineslice_radius"] = 6
 scroll.add(main_hb)
