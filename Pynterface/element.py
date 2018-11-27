@@ -2,6 +2,7 @@ from grid import *
 from events import *
 from event_manager import *
 from nineslice import Nineslice
+import gui
 import pygame.event
 import pygame.image
 import pygame.rect
@@ -30,6 +31,8 @@ class element:
 
 	tab_order = 0
 
+	event_type_bindings = None
+
 	def __init__(self):
 		self.options = {}
 		self.options["focused"] = {}
@@ -37,6 +40,8 @@ class element:
 		self.focus_grid.set(0,0, self)
 		self.eventmgr = event_manager()
 		self.image_surfaces = {}
+		self.id = gui.get_id(self)
+		self.event_type_bindings = []
 
 	def draw(self, events):
 		opt_val = ""
@@ -63,12 +68,27 @@ class element:
 			nineslice = Nineslice(image_surf, self.options["nineslice_radius"])
 			nineslice.apply_to_surface(self.image_surfaces[state])
 
+	def remove_hover(self, event=None):
+		pass
 
-	def bind(self, event, callback):
-		return self.eventmgr.bind(event, callback)
+	def _callback(self, event, elem_id, callback):
+		if event.elem.id != elem_id:
+			return
+		callback(event)
+
+	def bind(self, event_type, callback):
+		if not event_type in self.event_type_bindings:
+			return
+		f = lambda event: self._callback(event, self.id, callback)
+		return self.eventmgr.bind(event_type, f)
 
 	def unbind(self, callback_id):
 		self.eventmgr.unbind(callback_id)
+
+	def handle_events(self, events):
+		if len(events) < 1:
+			return
+		self.eventmgr.run(events)
 
 	def set_gui(self, gui):
 		self.gui = gui

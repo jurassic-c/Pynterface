@@ -10,9 +10,12 @@ class hoverable:
 
 	def __init__(self):
 		self.options["hover"] = {}
+		self.event_type_bindings.append(MOUSEOVER)
+		self.event_type_bindings.append(MOUSEOUT)
+		self.eventmgr.bind(MOUSEMOTION, self._on_mousemotion)
 
 	def set_gui(self, gui):
-		gui.bind(MOUSEMOTION, self._on_mousemotion)
+		pass
 
 	def set_target_surface(self, surface):
 		pass
@@ -22,11 +25,13 @@ class hoverable:
 
 	def mouse_over(self, event):
 		if self.hover and not self.last_hover:
-			self.eventmgr.run([pygame.event.Event(MOUSEOVER, {"elem": self, "pos":self.gui.mouse_pos})])
+			ev = pygame.event.Event(MOUSEOVER, {"elem": self, "pos":self.gui.mouse_pos})
+			pygame.event.post(ev)
 
-	def mouse_out(self, event):
+	def mouse_out(self, event=None):
 		if not self.hover and self.last_hover:
-			self.eventmgr.run([pygame.event.Event(MOUSEOUT, {"elem": self, "pos":self.gui.mouse_pos})])
+			ev = pygame.event.Event(MOUSEOUT, {"elem": self, "pos":self.gui.mouse_pos})
+			pygame.event.post(ev)
 
 	def _on_mousemotion(self, event):
 		if not self.hover_enabled:

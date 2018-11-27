@@ -2,40 +2,25 @@ from Pynterface import *
 import pygame
 from pygame.locals import *
 
-class button(element, clickable, hoverable, textable):
-	filled = True
-	hover_image_path = ""
-	pressed_image_path = ""
+class text_field(element, clickable, textable):
 	focused_image_path = ""
 
 	def __init__(self, width, height, x=0, y=0):
 		self.rect = pygame.Rect(x, y, width, height)
 		element.__init__(self)
 		clickable.__init__(self)
-		hoverable.__init__(self)
 
 	def set_gui(self, gui):
 		element.set_gui(self, gui)
 		clickable.set_gui(self, gui)
-		hoverable.set_gui(self, gui)
 		textable.set_gui(self, gui)
 
 	def set_target_surface(self, surface):
 		element.set_target_surface(self, surface)
 		clickable.set_target_surface(self, surface)
-		hoverable.set_target_surface(self, surface)
 		textable.set_target_surface(self, surface)
-	
-	def remove_hover(self, event=None):
-		self.hover = False
-		self.mouse_out(event)
-		self.last_hover = False
 
 	def draw(self, events):
-		opt_val = ""
-		if self.options.has_key("hover") and self.options["hover"].has_key("image"):
-			opt_val = self.options["hover"]["image"]
-		self.setup_state_image(opt_val, "hover")
 		opt_val = ""
 		if self.options.has_key("focused") and self.options["focused"].has_key("image"):
 			opt_val = self.options["focused"]["image"]
@@ -46,12 +31,9 @@ class button(element, clickable, hoverable, textable):
 		self.setup_state_image(opt_val, "pressed")
 		element.draw(self, events)
 		clickable.draw(self, events)
-		hoverable.draw(self, events)
 
 		rectSurf = pygame.Surface((self.rect.w, self.rect.h))
 		width = 0
-		if not self.filled:
-			width = 1
 
 		color = (122, 0, 0)
 		image_position = "center"
@@ -67,11 +49,6 @@ class button(element, clickable, hoverable, textable):
 				color = self.options["focused"]["color"]
 			if self.image_surfaces.has_key("focused"):
 				image_key = "focused"
-		if self.hover:
-			if self.options["hover"].has_key("color"):
-				color = self.options["hover"]["color"]
-			if self.image_surfaces.has_key("hover"):
-				image_key = "hover"
 		if self.pressed:
 			if self.options["pressed"].has_key("color"):
 				color = self.options["pressed"]["color"]

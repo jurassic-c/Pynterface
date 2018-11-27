@@ -34,6 +34,7 @@ class gui(container):
 	def __init__(self, surface):
 		container.__init__(self)
 		self.surface = surface
+		self.rect = surface.get_rect()
 		self.keymap = keymap()
 		self.focus_coords = (0,0)
 		self.tabs = []
@@ -41,12 +42,16 @@ class gui(container):
 		self.eventmgr.bind(MOUSEMOTION, self._on_mouse_motion)
 		self.eventmgr.bind(KEYDOWN, self._on_keydown)
 		self.eventmgr.bind(KEYUP, self._on_keyup)
+		self.parent = self
+		self.gui = self
 
-	def draw(self, events, frame_time):
+	def draw(self, event_list, frame_time):
 		self.frame_time = frame_time
-		self.eventmgr.run(events)
+		self.eventmgr.run(event_list)
 		for child in self.child_elements:
-			child.draw(events)
+			child.handle_events(event_list)
+		for child in self.child_elements:
+			child.draw(event_list)
 
 	def add(self, elem):
 		container.add(self, elem)
@@ -149,8 +154,12 @@ class gui(container):
 		focused = self.focus_grid.item(self.focus_coords)
 		focused.unpress(1)
 
+	def mouse_over(self, event=None):
+		pass
+
 	def _on_mouse_motion(self, event):
 		self.mouse_pos = event.pos
+		hoverable._on_mousemotion(self, event)
 
 	def _on_keydown(self, event):
 		if event.key in [K_LSHIFT, K_RSHIFT]:

@@ -1,7 +1,7 @@
 import pygame
 from pygame import locals
 
-pface_event = locals.USEREVENT + 990
+pface_event = locals.USEREVENT
 
 CLICK = pface_event + 1
 DOUBLECLICK = pface_event + 2

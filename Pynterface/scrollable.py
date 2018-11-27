@@ -1,3 +1,13 @@
+###
+# Options:
+#
+# scrollbar_width:				Integer. Width in pixels of the scrollbars. Default 15
+# bg_color:						Pygame Color. Background color to use.
+# fg_color:						Pygame Color. Foreground or handle color to use.
+# fg_image:						String.	Path to Foreground or handle image to use.
+# fg_image_nineslice_radius:	Integer. Nineslice radius to use for foreground image
+#
+
 import pygame
 from events import *
 from pygame.locals import *
@@ -32,7 +42,7 @@ class scrollable(container):
 		self.surf = pygame.Surface((w, h))
 		self.rect = self.surf.get_rect()
 
-	def mouse_event(self, event):
+	def _on_mouse_event(self, event):
 		self.last_pos = event.pos
 		y_off = self.y_offset
 		x_off = self.x_offset
@@ -89,7 +99,7 @@ class scrollable(container):
 		self.gui = gui
 		for child in self.child_elements:
 			child.set_gui(self.gui)
-		gui.eventmgr.bind(MOUSEBUTTONDOWN, self.mouse_event)
+		self.eventmgr.bind(MOUSEBUTTONDOWN, self._on_mouse_event)
 
 	def set_target_surface(self, surface):
 		container.set_target_surface(self, surface)

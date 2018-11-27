@@ -1,14 +1,6 @@
-###
-# Options:
-#
-# scrollbar_width:				Integer. Width in pixels of the scrollbars. Default 15
-# bg_color:						Pygame Color. Background color to use.
-# fg_color:						Pygame Color. Foreground or handle color to use.
-# fg_image:						String.	Path to Foreground or handle image to use.
-# fg_image_nineslice_radius:	Integer. Nineslice radius to use for foreground image
-#
 import pygame, sys
 from button import *
+from text_field import *
 from pygame.locals import *
 
 from Pynterface import *
@@ -16,7 +8,8 @@ from Pynterface import *
 def rollover(event):
 	print "MOUSEOVER:", event.elem.id
 
-def rollout(event): print "MOUSEOUT:", event.elem.id
+def rollout(event):
+	print "MOUSEOUT:", event.elem.id
 
 def mousedown(event):
 	pass
@@ -25,9 +18,10 @@ def mouseup(event):
 	pass
 
 def doclick(event):
-	print "CLICK"
+	print "CLICK: %d" % event.elem.id
 
 def doubleclick(event):
+	print "DOUBLE CLICK %d" % event.elem.id
 	elem = event.elem
 	pinned = False
 	if elem.options.has_key("pinned"):
@@ -65,7 +59,7 @@ def get_button(w, h, color=(122,0,0)):
 	bttn.options["pressed"]["image"] = "assets/button_pressed.png";
 	bttn.options["focused"]["image"] = "assets/button_focused.png";
 	bttn.options["nineslice_radius"] = 5
-	bttn.options["text"] = "Test Message"
+	bttn.options["text"] = "Button ID: %d" % bttn.id
 	bttn.options["font_size"] = 15
 	bttn.options["text_color"] = (0,0,255, 128)
 #	bttn.options["color"] = color
@@ -150,12 +144,24 @@ scroll.options["fg_image"] = "assets/scroll_handle.png"
 scroll.options["fg_image_nineslice_radius"] = 6
 scroll.add(main_hb)
 
-guiObj.add(scroll)
+main_vb = vbox()
+main_vb.padding = 10
+main_vb.add(scroll)
+
+text = text_field(200, 25)
+text.options["color"] = (122,122,122,122)
+text.options["text_color"] = (0,0,0)
+text.options["text"] = "TEST MESSAGE"
+text.options["text_position"] = "left"
+main_vb.add(text)
+
+guiObj.add(main_vb)
 
 frame_time = 0
 
 while True:
 	events = pygame.event.get()
+	pygame.event.clear()
 	guiObj.draw(events, frame_time)
 	for event in events:
 		if event.type == QUIT:

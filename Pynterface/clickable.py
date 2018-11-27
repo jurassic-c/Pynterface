@@ -14,10 +14,12 @@ class clickable:
 
 	def __init__(self):
 		self.options["pressed"] = {}
+		self.event_type_bindings.append(CLICK)
+		self.event_type_bindings.append(DOUBLECLICK)
 
 	def set_gui(self, gui):
-		gui.eventmgr.bind(MOUSEBUTTONDOWN, self._on_mousebutton_down)
-		gui.eventmgr.bind(MOUSEBUTTONUP, self._on_mousebutton_up)
+		self.eventmgr.bind(MOUSEBUTTONDOWN, self._on_mousebutton_down)
+		self.eventmgr.bind(MOUSEBUTTONUP, self._on_mousebutton_up)
 
 	def set_target_surface(self, surface):
 		pass
@@ -39,12 +41,10 @@ class clickable:
 		self.double_click_timer = 0
 		self.focus()
 		self.gui.set_focus(self.focus_coords)
-		self.eventmgr.run([pygame.event.Event(MOUSEBUTTONDOWN, {"elem": self, "pos":self.gui.mouse_pos})])
 
 	def unpress(self, click=0):
 		self.pressed = False
 		self.double_click_timer = 0
-		self.eventmgr.run([pygame.event.Event(MOUSEBUTTONUP, {"elem": self, "pos":self.gui.mouse_pos})])
 		if click:
 			if click == 1:
 				self.eventmgr.run([pygame.event.Event(CLICK, {"elem": self, "pos":self.gui.mouse_pos})])
