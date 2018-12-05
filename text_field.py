@@ -1,14 +1,29 @@
 from Pynterface import *
 import pygame
 from pygame.locals import *
+from Pynterface.events import *
 
 class text_field(element, clickable, textable):
 	focused_image_path = ""
+	value = ""
+	last_value = ""
 
 	def __init__(self, width, height, x=0, y=0):
 		self.rect = pygame.Rect(x, y, width, height)
 		element.__init__(self)
 		clickable.__init__(self)
+		self.event_type_bindings.append("CHANGE")
+		self.eventmgr.bind(KEYDOWN, self._on_keydown)
+		self.max_width_text_align = "right"
+
+	def _on_keydown(self, event):
+		if not self.focused:
+			return
+		if event.key in [8]:
+			if len(self.value):
+				self.value = self.value[:-1]
+		else:
+			self.value+= event.unicode
 
 	def set_gui(self, gui):
 		element.set_gui(self, gui)
@@ -20,7 +35,14 @@ class text_field(element, clickable, textable):
 		clickable.set_target_surface(self, surface)
 		textable.set_target_surface(self, surface)
 
+	def handle_events(self, events):
+		element.handle_events(self, events)
+
 	def draw(self, events):
+		if self.last_value != self.value:
+			change_event = pygame.event.Event(PYNTERFACE_EVENT, {"pface_type": "CHANGE", "elem": self, "old_value": self.last_value, "new_value": self.value})
+			pygame.event.post(change_event)
+		self.last_value = self.value
 		opt_val = ""
 		if self.options.has_key("focused") and self.options["focused"].has_key("image"):
 			opt_val = self.options["focused"]["image"]
@@ -61,7 +83,12 @@ class text_field(element, clickable, textable):
 
 		self.target_surface.blit(rectSurf, self.rect)
 
+		if self.focused:
+			self.options["text"]+= "_"
+
 		textable.draw(self, events)
+
+		self.options["text"] = self.value
 
 	def get_image_position_rect(self, image_surf, target_rect, position="center"):
 		top = 0

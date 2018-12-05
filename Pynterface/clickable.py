@@ -8,14 +8,14 @@ class clickable:
 	mouse_button_down = False
 	last_pos = None
 	pressed = False
-	double_click_timeout = 200
+	double_click_timeout = 100
 	double_click_timer = 0
 	frame_time = 0
 
 	def __init__(self):
 		self.options["pressed"] = {}
-		self.event_type_bindings.append(CLICK)
-		self.event_type_bindings.append(DOUBLECLICK)
+		self.event_type_bindings.append("CLICK")
+		self.event_type_bindings.append("DOUBLECLICK")
 
 	def set_gui(self, gui):
 		self.eventmgr.bind(MOUSEBUTTONDOWN, self._on_mousebutton_down)
@@ -47,9 +47,9 @@ class clickable:
 		self.double_click_timer = 0
 		if click:
 			if click == 1:
-				self.eventmgr.run([pygame.event.Event(CLICK, {"elem": self, "pos":self.gui.mouse_pos})])
+				pygame.event.post(pygame.event.Event(PYNTERFACE_EVENT, {"pface_type": "CLICK", "elem": self, "pos":self.gui.mouse_pos}))
 			elif click == 2:
-				self.eventmgr.run([pygame.event.Event(DOUBLECLICK, {"elem": self, "pos":self.gui.mouse_pos})])
+				pygame.event.post(pygame.event.Event(PYNTERFACE_EVENT, {"pface_type": "DOUBLECLICK", "elem": self, "pos":self.gui.mouse_pos}))
 
 	def _on_mousebutton_down(self, event):
 		if not self.click_enabled:

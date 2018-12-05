@@ -83,7 +83,6 @@ class button(element, clickable, hoverable, textable):
 			pygame.draw.rect(rectSurf, color, pygame.Rect(0, 0, self.rect.width, self.rect.height), width)
 
 		self.target_surface.blit(rectSurf, self.rect)
-
 		textable.draw(self, events)
 
 	def get_image_position_rect(self, image_surf, target_rect, position="center"):

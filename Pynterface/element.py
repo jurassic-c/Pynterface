@@ -80,7 +80,7 @@ class element:
 		if not event_type in self.event_type_bindings:
 			return
 		f = lambda event: self._callback(event, self.id, callback)
-		return self.eventmgr.bind(event_type, f)
+		return self.eventmgr.bind_pynterface(event_type, f)
 
 	def unbind(self, callback_id):
 		self.eventmgr.unbind(callback_id)
@@ -111,13 +111,13 @@ class element:
 
 	def focus(self, options={}):
 		if not self.focused:
-			self.eventmgr.run([pygame.event.Event(FOCUS, {"elem": self})])
+			self.eventmgr.run([pygame.event.Event(PYNTERFACE_EVENT, {"pface_type": "FOCUS", "elem": self})])
 		self.focused = True
 		self.parent.set_focus(self.id)
 
 	def blur(self):
 		if self.focused:
-			self.eventmgr.run([pygame.event.Event(BLUR, {"elem": self})])
+			self.eventmgr.run([pygame.event.Event(PYNTERFACE_EVENT, {"pface_type": "BLUR", "elem": self})])
 		self.focused = False
 
 	def element_right(self):

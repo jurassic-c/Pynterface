@@ -2,6 +2,7 @@ import pygame, sys
 from button import *
 from text_field import *
 from pygame.locals import *
+from Pynterface.events import *
 
 from Pynterface import *
 
@@ -46,14 +47,14 @@ def blur(event):
 
 def get_button(w, h, color=(122,0,0)):
 	bttn = button(w, h)
-	bttn.bind(MOUSEOVER, rollover)
-	bttn.bind(MOUSEOUT, rollout)
-	bttn.bind(MOUSEBUTTONDOWN, mousedown)
-	bttn.bind(MOUSEBUTTONUP, mouseup)
-	bttn.bind(CLICK, doclick)
-	bttn.bind(DOUBLECLICK, doubleclick)
-	bttn.bind(FOCUS, focus)
-	bttn.bind(BLUR, blur)
+	bttn.bind("MOUSEOVER", rollover)
+	bttn.bind("MOUSEOUT", rollout)
+	bttn.bind("MOUSEBUTTONDOWN", mousedown)
+	bttn.bind("MOUSEBUTTONUP", mouseup)
+	bttn.bind("CLICK", doclick)
+	bttn.bind("DOUBLECLICK", doubleclick)
+	bttn.bind("FOCUS", focus)
+	bttn.bind("BLUR", blur)
 	bttn.options["image"] = "assets/button.png";
 	bttn.options["hover"]["image"] = "assets/button_hover.png";
 	bttn.options["pressed"]["image"] = "assets/button_pressed.png";
@@ -148,17 +149,38 @@ main_vb = vbox()
 main_vb.padding = 10
 main_vb.add(scroll)
 
-text = text_field(200, 25)
+text_hb = hbox()
+text_hb.padding = 10
+text = text_field(200, 30)
 text.options["color"] = (122,122,122,122)
 text.options["text_color"] = (0,0,0)
-text.options["text"] = "TEST MESSAGE"
+text.options["font_size"] = 20
 text.options["text_position"] = "left"
-main_vb.add(text)
+text.options["horizontal_padding"] = 10
+text.options["max_width"] = 200
+
+def clear_txt(ev=None):
+	text.value = ""
+
+def update_label(ev=None):
+	print "UPDATING LABEL"
+	bttn_seven = guiObj.get_element(7)
+	bttn_seven.options["text"] = text.value
+text.bind("CHANGE", update_label)
+
+clear_btn = get_button(80, 30)
+clear_btn.options["text"] = "Clear"
+clear_btn.bind("CLICK", clear_txt)
+
+text_hb.add(text)
+text_hb.add(clear_btn)
+main_vb.add(text_hb)
 
 guiObj.add(main_vb)
 
 frame_time = 0
 
+pygame.key.set_repeat(100)
 while True:
 	events = pygame.event.get()
 	pygame.event.clear()
