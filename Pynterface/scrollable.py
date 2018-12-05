@@ -186,7 +186,7 @@ class scrollable(container):
 			if self.max_x_offset > 0:
 				x_offset = (float(self.x_offset)/float(self.max_x_offset))*(self.rect.w-handle_w-self.scrollbar_width*self.show_vert_multiplier)
 				
-			self.surf.blit(handle_surf, (x_offset, self.rect.h-self.scrollbar_width))
+			self.surf.blit(self.horiz_handle_surf, (x_offset, self.rect.h-self.scrollbar_width))
 	def setup_fg_image(self):
 		image_path = ""
 		if self.options.has_key("fg_image"):
