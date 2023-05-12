@@ -271,3 +271,17 @@ class scrollable(container):
 		self.fg_image = pygame.image.load(image_path)
 		if self.options.has_key("fg_image_nineslice_radius"):
 			self.fg_image_nineslice = Nineslice(self.fg_image, self.options["fg_image_nineslice_radius"])
+
+	def handle_events(self, evs):
+		if len(evs) < 1:
+			return
+		element.handle_events(self, evs)
+		filtered_events = []
+		window_rect = Rect(self.rect.left, self.rect.top, self.rect.w-self.scrollbar_width, self.rect.h-self.scrollbar_width)
+		for ev in evs:
+			if ev.type in [MOUSEMOTION,MOUSEBUTTONUP,MOUSEBUTTONDOWN]:
+				if not window_rect.collidepoint(ev.pos):
+					continue
+			filtered_events.append(ev)
+		for child in self.child_elements:
+			child.handle_events(filtered_events)
