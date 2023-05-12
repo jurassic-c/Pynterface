@@ -18,7 +18,7 @@ class container(element, hoverable):
 		hoverable.__init__(self)
 		self.focus_grid = grid()
 		self.bind("MOUSEOUT", self.remove_hover)
-#		self.bind(MOUSEOVER, self.hover)
+		self.bind("MOUSEOVER", self.hover)
 
 	def hover(self, event):
 		print "COORDS: %d" % self.id, self.rect, event.pos
