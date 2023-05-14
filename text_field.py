@@ -15,6 +15,7 @@ class text_field(element, clickable, textable):
 		self.event_type_bindings.append("CHANGE")
 		self.eventmgr.bind(KEYDOWN, self._on_keydown)
 		self.max_width_text_align = "right"
+		self.options["text"] = ""
 
 	def _on_keydown(self, event):
 		if not self.focused:

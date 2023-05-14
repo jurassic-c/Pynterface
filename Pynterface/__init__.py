@@ -3,6 +3,8 @@ from element import *
 from container import *
 from clickable import *
 from hoverable import *
+from image import *
+from label import *
 from hbox import *
 from vbox import *
 from grid import *
@@ -11,3 +13,4 @@ from event_manager import *
 from nineslice import *
 from textable import *
 from scrollable import *
+from spacer import *

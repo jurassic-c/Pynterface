@@ -75,7 +75,7 @@ def get_button(w, h, color=(122,0,0)):
 pygame.init()
 fpsClock = pygame.time.Clock()
 
-window = pygame.display.set_mode((540,430))
+window = pygame.display.set_mode((800,600))
 
 guiObj = gui.gui(window)
 
@@ -88,10 +88,12 @@ vb = vbox()
 vb.padding = 10
 
 #H2
+image = image("assets/bloodtank.png")
 hb = hbox()
 hb.padding = 10
 hb.add(get_button(100,100))
-hb.add(get_button(100,100))
+#hb.add(get_button(100,100))
+hb.add(image)
 hb.add(get_button(100,100))
 vb.add(hb)
 
@@ -139,13 +141,14 @@ hb.add(vb2)
 vb.add(hb)
 main_hb.add(vb)
 
-scroll = scrollable(250,250)
+scroll = scrollable(800,400)
 scroll.options["bg_color"] = (128,128,128,128)
 scroll.options["fg_image"] = "assets/scroll_handle.png"
 scroll.options["fg_image_nineslice_radius"] = 6
 scroll.add(main_hb)
 
 main_vb = vbox()
+main_vb.options["bg_image"] = "assets/main_menu.png"
 main_vb.padding = 10
 main_vb.add(scroll)
 

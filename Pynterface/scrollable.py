@@ -78,14 +78,16 @@ class scrollable(container):
 		scroll_multiplier=2
 		if event.button == 1:
 			self.mouse_down = True
-			vert_rect = self.vert_handle_surf.get_rect()
-			horiz_rect = self.horiz_handle_surf.get_rect()
-			if horiz_rect.collidepoint((event.pos[0]-self.handle_x_offset, event.pos[1]-self.rect.h+self.scrollbar_width)):
-				self.dragging_horiz = True
-				self.drag_origin = event.pos
-			if vert_rect.collidepoint((event.pos[0]-self.rect.w+self.scrollbar_width, event.pos[1]-self.handle_y_offset)):
-				self.dragging_vert = True
-				self.drag_origin = event.pos
+			if self.child_elements[0].rect.w > self.rect.w:
+				horiz_rect = self.horiz_handle_surf.get_rect()
+				if horiz_rect.collidepoint((event.pos[0]-self.handle_x_offset, event.pos[1]-self.rect.h+self.scrollbar_width)):
+					self.dragging_horiz = True
+					self.drag_origin = event.pos
+			if self.child_elements[0].rect.h > self.rect.h:
+				vert_rect = self.vert_handle_surf.get_rect()
+				if vert_rect.collidepoint((event.pos[0]-self.rect.w+self.scrollbar_width, event.pos[1]-self.handle_y_offset)):
+					self.dragging_vert = True
+					self.drag_origin = event.pos
 		if event.button == 4:
 			y_off-=scroll_multiplier
 		if event.button == 5:
@@ -184,13 +186,15 @@ class scrollable(container):
 
 	def draw(self, events):
 		self.surf.fill((0,0,0))
+		self.surf.set_colorkey((0,0,0))
+		self.target_surface.blit(self.surf, self.rect)
 		self.setup_fg_image()
 		for child in self.child_elements:
 			child.draw(events)
-		self.bg_color = (128, 128, 128, 128)
+		self.bg_color = (128, 128, 128, 255)
 		if self.options.has_key("bg_color"):
 			self.bg_color = self.options["bg_color"]
-		self.fg_color = (0, 0, 0, 128)
+		self.fg_color = (0, 0, 0, 255)
 		if self.options.has_key("fg_color"):
 			self.fg_color = self.options["fg_color"]
 		if self.options.has_key("scrollbar_width"):

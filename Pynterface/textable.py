@@ -21,7 +21,7 @@ class textable:
 	def set_target_surface(self, surface):
 			pass
 
-	def draw(self, events):
+	def render_text(self):
 		if not self.font:
 			font_path = "assets/fonts/open-sans/OpenSans-Regular.ttf"
 			self.font_size = 10
@@ -35,7 +35,6 @@ class textable:
 			self.font = pygame.freetype.Font(font_path, size=self.font_size)
 			if text_color:
 				self.font.fgcolor = text_color
-
 			
 		if self.options.has_key("horizontal_padding"):
 			self.horizontal_padding = self.options["horizontal_padding"]
@@ -72,7 +71,13 @@ class textable:
 			if self.options.has_key("text_position"):
 					text_position = self.options["text_position"]
 			rectSurf.blit(self.text_surf, self.get_text_position_rect(self.text_surf, self.rect, text_position));
-			self.target_surface.blit(rectSurf, self.rect)
+			return rectSurf
+	
+	def draw(self, events):
+		rectSurf = self.render_text()
+		if not rectSurf:
+			return
+		self.target_surface.blit(rectSurf, self.rect)
 
 	def get_text_position_rect(self, image_surf, target_rect, position="center"):
 			top = 0

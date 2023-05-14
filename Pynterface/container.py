@@ -9,6 +9,7 @@ class container(element, hoverable):
 	child_elements = None
 	child_ids = None
 	focused_id = 0
+	bg_surface = None
 
 	def __init__(self):
 		self.child_elements = []
@@ -23,7 +24,7 @@ class container(element, hoverable):
 	def hover(self, event):
 		print "COORDS: %d" % self.id, self.rect, event.pos
 		for child in self.child_elements:
-			print "    %d" % child.id 
+			print "	%d" % child.id 
 
 	def add(self, elem):
 		elem.parent = self
@@ -61,6 +62,17 @@ class container(element, hoverable):
 #					filtered_events.append(ev)
 #			except:
 #				filtered_events.append(ev)
+		
+		if self.options.has_key("bg_image"):
+			if not self.bg_surface:
+				self.bg_surface = pygame.image.load(self.options["bg_image"])
+		else:
+			if not self.bg_surface:
+				self.bg_surface = pygame.Surface((self.rect.w, self.rect.h))
+				self.bg_surface.fill((255,0,255))
+				self.bg_surface.set_colorkey((255,0,255))
+		self.target_surface.blit(self.bg_surface, self.rect)
+
 		for child in self.child_elements:
 			child.draw(filtered_events)
 
